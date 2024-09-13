@@ -237,7 +237,7 @@ public class SplashWindow extends javax.swing.JFrame {
                     }
 
                     try {
-                        Thread.sleep(100);  ///// loading time
+                        Thread.sleep(10);  ///// loading time
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

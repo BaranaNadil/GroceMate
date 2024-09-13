@@ -29,7 +29,7 @@ public class MySQL{
         }   
     }
     
-    public ResultSet execute(String query) throws SQLException{
+    public static ResultSet execute(String query) throws SQLException{
     
         createConnection();
         

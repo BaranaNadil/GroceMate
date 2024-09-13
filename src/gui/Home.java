@@ -16,6 +16,15 @@ public class Home extends javax.swing.JFrame {
         signIn.setVisible(true);
 
     }
+    
+    public void adminchoose(){
+        
+        AdminChoose choose = new AdminChoose(this, true);
+        choose.setVisible(true);
+        
+    }
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

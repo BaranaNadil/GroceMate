@@ -1,26 +1,67 @@
 package gui;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-
+import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import model.MySQL;
 
 public class SignInDialog extends javax.swing.JDialog {
-
 
     public SignInDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setSvg();
+        jTextField1.grabFocus();
     }
-    
-    
-        private void setSvg() {
+
+    private void signIn() {
+
+        String email = jTextField1.getText();
+        String password = String.valueOf(jPasswordField1.getPassword());
+
+        if (email.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Please Enter Your Email", "Warning", JOptionPane.WARNING_MESSAGE);
+            jTextField1.grabFocus();
+        } else if (password.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Please Enter Your Password", "Warning", JOptionPane.WARNING_MESSAGE);
+            jPasswordField1.grabFocus();
+        } else {
+
+            try {
+                ResultSet result = MySQL.execute("SELECT * FROM `employee` WHERE `email` = '" + email + "' AND `password` = '" + password + "'");
+
+                if (result.next()) {
+
+                    if (result.getString("employee_type_id").equals("1")) {
+                        this.dispose();
+                        Home home = new Home();
+                        home.adminchoose();
+                    } else {
+                        this.dispose();
+                        Home home = new Home();
+                        home.adminchoose();
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Email or Password", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private void setSvg() {
 
         FlatSVGIcon icon = new FlatSVGIcon("resources//LoginImage.svg", jLabel2.getWidth(), jLabel2.getHeight());
         jLabel2.setIcon(icon);
 
-
     }
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -37,7 +78,14 @@ public class SignInDialog extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setUndecorated(true);
+        setResizable(false);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                formKeyReleased(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -63,8 +111,20 @@ public class SignInDialog extends javax.swing.JDialog {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("E m a i l  :");
 
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
+
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("P a s s w o r d :");
+
+        jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jPasswordField1KeyReleased(evt);
+            }
+        });
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton1.setText("S I G N  I N");
@@ -135,12 +195,30 @@ public class SignInDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       
-        this.dispose();
-        
+
+        signIn();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
-  
+    private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+           signIn();
+       }
+    }//GEN-LAST:event_formKeyReleased
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            jPasswordField1.grabFocus();
+       }
+    }//GEN-LAST:event_jTextField1KeyReleased
+
+    private void jPasswordField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyReleased
+       if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+           signIn();
+       }
+    }//GEN-LAST:event_jPasswordField1KeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
