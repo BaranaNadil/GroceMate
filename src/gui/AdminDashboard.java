@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
-/**
- *
- * @author User
- */
+
 public class AdminDashboard extends javax.swing.JFrame {
 
     /**
@@ -17,13 +10,13 @@ public class AdminDashboard extends javax.swing.JFrame {
      */
     public AdminDashboard() {
         initComponents();
-        setSvg();
+//        setSvg();
     }
     
-     private void setSvg() {
-        FlatSVGIcon icon3 = new FlatSVGIcon("resources//logo.svg", jLabel5.getWidth(), jLabel5.getHeight());
-        jLabel5.setIcon(icon3);
-    }
+//     private void setSvg() {
+//        FlatSVGIcon icon3 = new FlatSVGIcon("resources//logo.svg", jLabel5.getWidth(), jLabel5.getHeight());
+//        jLabel5.setIcon(icon3);
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
