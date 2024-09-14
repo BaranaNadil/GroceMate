@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.event.KeyEvent;
+
 
 public class AdminChoose extends javax.swing.JDialog {
 
@@ -28,11 +30,31 @@ public class AdminChoose extends javax.swing.JDialog {
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/adminCooseCasier1 (2).png"))); // NOI18N
         jButton2.setText("Cashier");
         jButton2.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/adminCooseCasier1 (1).png"))); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jButton2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jButton2KeyReleased(evt);
+            }
+        });
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/AdminChooseDashbord1.png"))); // NOI18N
         jButton1.setText("Dashbord");
         jButton1.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/AdminChooseDashbord2.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jButton1KeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -71,6 +93,43 @@ public class AdminChoose extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       
+        this.dispose();
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+      
+        this.dispose();
+        SplashWindow.home.dispose();
+        AdminDashboard dashbord = new AdminDashboard();
+        dashbord.setVisible(true);
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton2KeyReleased
+        
+        if(evt.getKeyCode() == KeyEvent.VK_LEFT){
+            jButton1.grabFocus();
+        }
+        if(evt.getKeyCode() == KeyEvent.VK_RIGHT){
+            jButton1.grabFocus();
+        }
+        
+    }//GEN-LAST:event_jButton2KeyReleased
+
+    private void jButton1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyReleased
+        
+         if(evt.getKeyCode() == KeyEvent.VK_LEFT){
+            jButton2.grabFocus();
+        }
+        if(evt.getKeyCode() == KeyEvent.VK_RIGHT){
+            jButton2.grabFocus();
+        }
+        
+    }//GEN-LAST:event_jButton1KeyReleased
 
     /**
      * @param args the command line arguments

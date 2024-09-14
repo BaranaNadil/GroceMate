@@ -36,8 +36,6 @@ public class SignInDialog extends javax.swing.JDialog {
 
                     if (result.getString("employee_type_id").equals("1")) {
                         this.dispose();
-                        Home home = new Home();
-                        home.adminchoose();
                     } else {
                         this.dispose();
                         Home home = new Home();

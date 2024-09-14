@@ -13,9 +13,9 @@ public class SplashWindow extends javax.swing.JFrame {
 
     public static SplashWindow splashWindow;
 
-    /**
-     * Creates new form SplashWindow
-     */
+ 
+    public static Home home ;
+    
     public SplashWindow() {
         initComponents();
         setSvg();
@@ -243,7 +243,7 @@ public class SplashWindow extends javax.swing.JFrame {
                     }
                 }
                 splashWindow.dispose();
-                Home home = new Home();
+                home = new Home();
                 home.setVisible(true);
                 home.signInWindow();
 
