@@ -30,6 +30,8 @@ public class SplashWindow extends javax.swing.JFrame {
         jLabel3.setIcon(icon2);
 
     }
+    
+
 
     private void lodingProgressAnimation() {
         Thread lodingThread = new Thread(new Runnable() {
