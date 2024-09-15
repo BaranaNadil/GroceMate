@@ -2,13 +2,20 @@ package gui;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import model.InvoiceItens;
 
 public class Home extends javax.swing.JFrame {
+
+    HashMap<String, InvoiceItens> invoiceItemsMap = new HashMap<>();
 
     public boolean customerSelecterd;
 
@@ -17,6 +24,67 @@ public class Home extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setSvgs();
         jButton5.grabFocus();
+    }
+    
+    
+    private void reset(){
+    
+        jLabel12.setText("STODK ID");
+        jLabel7.setText("PRODUCT'S TITLE");
+        jLabel11.setText("0.00");
+        jLabel15.setText("0.00");
+        jLabel17.setText("0.00");
+        jFormattedTextField2.setText("0.00");
+        jFormattedTextField1.setText("0.00");
+    
+    }
+    
+    
+
+    private Double total = 0.0;
+
+    ////Add to invoice table
+    private void addToInvoiceTable() {
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+        model.setRowCount(0);
+
+        SimpleDateFormat format = new SimpleDateFormat();
+
+        total = 0.0;
+
+        for (InvoiceItens invoiceItem : invoiceItemsMap.values()) {
+
+            Vector<String> vector = new Vector<>();
+            vector.add(invoiceItem.getStockID());
+            vector.add(invoiceItem.getName());
+            vector.add(String.valueOf(invoiceItem.getSellingPrice()));
+            vector.add(String.valueOf(invoiceItem.getQty()));
+
+            vector.add(String.valueOf(invoiceItem.getExp()));
+
+            double itemTotal = Double.parseDouble(invoiceItem.getSellingPrice()) * Double.parseDouble(invoiceItem.getQty());
+            
+            double discount = Double.parseDouble(invoiceItem.getDiscount());
+            
+            vector.add(String.valueOf(discount));
+            
+            if(discount > 0){
+                itemTotal -= discount;
+            }
+            
+            
+            total += itemTotal;
+            vector.add(String.valueOf(itemTotal));
+
+            model.addRow(vector);
+
+        }
+        jTextField2.setText(String.valueOf(total));
+        //2
+//        calculate();
+
     }
 
     //get customer name jLabel
@@ -67,6 +135,11 @@ public class Home extends javax.swing.JFrame {
     //get Quantity imput fild
     public JTextField getProductQuantityInput() {
         return jFormattedTextField2;
+    }
+
+    //get Stock Id lable
+    public JLabel getStockIdLable() {
+        return jLabel12;
     }
 
 /// Open custome registration jDialog
@@ -155,6 +228,8 @@ public class Home extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jFormattedTextField2 = new javax.swing.JFormattedTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -294,11 +369,11 @@ public class Home extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Barcode", "Discription", "Price", "Quantity", "Discount", "Total"
+                "Barcode", "Discription", "Price", "Quantity", "EXP", "Discount", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -306,10 +381,16 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jTable1.getTableHeader().setReorderingAllowed(false);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(2).setResizable(false);
             jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
             jTable1.getColumnModel().getColumn(5).setResizable(false);
         }
 
@@ -391,6 +472,11 @@ public class Home extends javax.swing.JFrame {
         jLabel26.setText("CUSTOMER MOBILE HEAR");
 
         jButton6.setText("Add to Incoice");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jLabel27.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel27.setForeground(new java.awt.Color(255, 255, 255));
@@ -402,6 +488,12 @@ public class Home extends javax.swing.JFrame {
 
         jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         jFormattedTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jFormattedTextField1.setText("0.00");
+        jFormattedTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jFormattedTextField1KeyReleased(evt);
+            }
+        });
 
         jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         jFormattedTextField2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -410,6 +502,15 @@ public class Home extends javax.swing.JFrame {
                 jFormattedTextField2KeyReleased(evt);
             }
         });
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Stock ID");
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel12.setText("STODK ID");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -461,7 +562,11 @@ public class Home extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel28)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -469,6 +574,10 @@ public class Home extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -489,7 +598,7 @@ public class Home extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel18)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -551,7 +660,7 @@ public class Home extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(14, 14, 14))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         pack();
@@ -575,21 +684,21 @@ public class Home extends javax.swing.JFrame {
     private void jFormattedTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField2KeyReleased
 
         try {
-            
+
             Double quntity = Double.parseDouble(jFormattedTextField2.getText());
 
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                
-                if(quntity <= Double.parseDouble(jLabel15.getText())){
+
+                if (quntity <= Double.parseDouble(jLabel15.getText())) {
                     jFormattedTextField1.grabFocus();
-                }else{
+                } else {
                     int condition = JOptionPane.showConfirmDialog(this, "Quntity Insufisiant Quntity. Do you want to add Maxsimen Quntity ?", "Warning", JOptionPane.WARNING_MESSAGE);
-                    
-                    if(condition == JOptionPane.OK_OPTION){
+
+                    if (condition == JOptionPane.OK_OPTION) {
                         jFormattedTextField2.setText(jLabel15.getText());
                         jFormattedTextField1.grabFocus();
-                    }else if(condition == JOptionPane.CANCEL_OPTION){
-                     jFormattedTextField2.setText("0");
+                    } else if (condition == JOptionPane.CANCEL_OPTION) {
+                        jFormattedTextField2.setText("0");
                     }
                 }
 
@@ -601,6 +710,78 @@ public class Home extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_jFormattedTextField2KeyReleased
+
+    private void jFormattedTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField1KeyReleased
+
+        try {
+            Double discount = Double.parseDouble(jFormattedTextField1.getText());
+
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                jButton6.grabFocus();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Discount Must be a Number", "Warning", JOptionPane.WARNING_MESSAGE);
+            jFormattedTextField1.setText("0");
+        }
+
+    }//GEN-LAST:event_jFormattedTextField1KeyReleased
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+
+        String stockID = jLabel12.getText();
+        String productName = jLabel7.getText();
+        String sellingPrice = jLabel11.getText();
+        String exp = jLabel17.getText();
+        String qty = jFormattedTextField2.getText();
+        String availabaleQty = jLabel15.getText();
+        String discount = jFormattedTextField1.getText();
+
+        if (Double.parseDouble(qty) > Double.parseDouble(availabaleQty)) {
+            JOptionPane.showMessageDialog(this, "Insuficint Quntity", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+
+            InvoiceItens invoiceItem = new InvoiceItens();
+            invoiceItem.setStockID(stockID);
+            invoiceItem.setName(productName);
+            invoiceItem.setSellingPrice(sellingPrice);
+            invoiceItem.setQty(qty);
+            invoiceItem.setExp(exp);
+            invoiceItem.setDiscount(discount);
+
+            if (invoiceItemsMap.get(stockID) == null) {
+                invoiceItemsMap.put(stockID, invoiceItem);
+
+            } else {
+
+                InvoiceItens found = invoiceItemsMap.get(jLabel12.getText());
+
+                int option = JOptionPane.showConfirmDialog(this, "Do You want to Update Quantity of product :" + productName);
+
+                if (option == JOptionPane.YES_OPTION) {
+
+                    found.setQty(String.valueOf(Double.parseDouble(found.getQty()) + Double.parseDouble(qty)));
+
+                }
+
+            }
+        }
+        addToInvoiceTable();
+        reset();
+        jButton4.grabFocus();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+       
+        if(evt.getClickCount() == 2){
+            int row = jTable1.getSelectedRow();
+//            ((DefaultTableModel)jTable1.getModel()).removeRow(row);
+                invoiceItemsMap.remove(jTable1.getValueAt(row,0));
+                addToInvoiceTable();
+                reset();
+                jButton4.grabFocus();
+        }
+        
+    }//GEN-LAST:event_jTable1MouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -651,6 +832,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -672,6 +854,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

@@ -251,6 +251,7 @@ public class SelectProduct extends javax.swing.JDialog {
                 home.getProductAvailableQuntityJLble().setText(String.valueOf(jTable1.getValueAt(row, 3)));
                 home.getProductsellingPriceJLable().setText(String.valueOf(jTable1.getValueAt(row, 7)));
                 home.getEXPjLble().setText(String.valueOf(jTable1.getValueAt(row, 6)));
+                home.getStockIdLable().setText(String.valueOf(jTable1.getValueAt(row,0)));
                 
                 this.dispose();
                 home.getProductQuantityInput().grabFocus();
