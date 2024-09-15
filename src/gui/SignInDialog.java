@@ -35,8 +35,13 @@ public class SignInDialog extends javax.swing.JDialog {
                 if (result.next()) {
 
                     if (result.getString("employee_type_id").equals("1")) {
+                        SplashWindow.home.getUserTypeLabel().setText("Cashier");
+                        SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         this.dispose();
                     } else {
+
+                        SplashWindow.home.getUserTypeLabel().setText("Administrator");
+                        SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         this.dispose();
                         Home home = new Home();
                         home.adminchoose();
@@ -199,22 +204,22 @@ public class SignInDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-           signIn();
-       }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            signIn();
+        }
     }//GEN-LAST:event_formKeyReleased
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
 
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             jPasswordField1.grabFocus();
-       }
+        }
     }//GEN-LAST:event_jTextField1KeyReleased
 
     private void jPasswordField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyReleased
-       if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-           signIn();
-       }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            signIn();
+        }
     }//GEN-LAST:event_jPasswordField1KeyReleased
 
 

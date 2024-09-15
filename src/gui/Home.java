@@ -2,9 +2,14 @@ package gui;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.event.KeyEvent;
+import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,10 +17,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.InvoiceItens;
+import model.MySQL;
 
 public class Home extends javax.swing.JFrame {
 
     HashMap<String, InvoiceItens> invoiceItemsMap = new HashMap<>();
+    HashMap<String, String> paymentMethodsMap = new HashMap<>();
 
     public boolean customerSelecterd;
 
@@ -23,12 +30,38 @@ public class Home extends javax.swing.JFrame {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setSvgs();
+        loadPamentMethods();
         jButton5.grabFocus();
     }
     
+    ///load payment methods to jCombo box
+    private void loadPamentMethods() {
+
+        try {
+
+            ResultSet result = MySQL.execute("SELECT * FROM `payment_method`");
+
+            Vector<String> vector = new Vector<>();
+
+            while (result.next()) {
+                vector.add(result.getString("name"));
+                paymentMethodsMap.put(result.getString("name"), result.getString("id"));
+            }
+
+            DefaultComboBoxModel model = new DefaultComboBoxModel(vector);
+
+            jComboBox2.setModel(model);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
     
-    private void reset(){
     
+
+    private void reset() {
+
         jLabel12.setText("STODK ID");
         jLabel7.setText("PRODUCT'S TITLE");
         jLabel11.setText("0.00");
@@ -36,12 +69,95 @@ public class Home extends javax.swing.JFrame {
         jLabel17.setText("0.00");
         jFormattedTextField2.setText("0.00");
         jFormattedTextField1.setText("0.00");
+
+    }
+
+    private Double total = 0.0;
+    private double discount = 0;
+    private double payment = 0;
+    private boolean withdrawPoints = false;
+    private double balance = 0;
+    private String paymentMethod = "Select";
+    private Double newPoints = 0.0;
     
+    /// calculate price to checkout 
+        private void calculate() {
+
+        // discount
+        if (jFormattedTextField3.getText().isEmpty()) {
+            discount = 0;
+        } else {
+            discount = Double.parseDouble(jFormattedTextField3.getText());
+        }
+        //payment
+        if (jFormattedTextField4.getText().isEmpty()) {
+            payment = 0;
+        } else {
+            payment = Double.parseDouble(jFormattedTextField4.getText());
+        }
+
+        //get Total value
+        total = Double.parseDouble(jTextField2.getText());
+
+        //check withdrow points
+        if (jCheckBox1.isSelected()) {
+            withdrawPoints = true;
+        } else {
+            withdrawPoints = false;
+        }
+
+        //get payment method
+        paymentMethod = String.valueOf(jComboBox2.getSelectedItem());
+
+        total -= discount;
+
+        if (total < 0) {
+            //error
+        } else {
+
+            if (withdrawPoints) {
+
+                if (Double.parseDouble(jLabel24.getText()) == total) {
+                    newPoints = 0.0;
+                    total -= Double.parseDouble(jLabel24.getText());
+                    payment -= total;
+
+                } else if (Double.parseDouble(jLabel24.getText()) < total) {
+
+                    newPoints = 0.0;
+                    total -= Double.valueOf(jLabel24.getText());
+                    // payment required
+                } else {
+                    newPoints = Double.parseDouble(jLabel24.getText()) - total;
+                    total = 0.0;
+                    // no payment requierd
+                }
+
+            }
+        }
+
+        if (paymentMethod.equals("Cash")) {
+            //discount Ok
+            jFormattedTextField4.setEditable(true);
+            balance = total - payment;
+            if (balance > 0) {
+                jButton7.setEnabled(false);
+            } else {
+                jButton7.setEnabled(true);
+            }
+
+        } else {
+            payment = total;
+            balance = 0;
+            jFormattedTextField4.setText(String.valueOf(payment));
+            jFormattedTextField4.setEditable(false);
+            jButton7.setEnabled(true);
+        }
+        jTextField3.setText(String.valueOf(balance));
+
     }
     
     
-
-    private Double total = 0.0;
 
     ////Add to invoice table
     private void addToInvoiceTable() {
@@ -65,16 +181,15 @@ public class Home extends javax.swing.JFrame {
             vector.add(String.valueOf(invoiceItem.getExp()));
 
             double itemTotal = Double.parseDouble(invoiceItem.getSellingPrice()) * Double.parseDouble(invoiceItem.getQty());
-            
+
             double discount = Double.parseDouble(invoiceItem.getDiscount());
-            
+
             vector.add(String.valueOf(discount));
-            
-            if(discount > 0){
+
+            if (discount > 0) {
                 itemTotal -= discount;
             }
-            
-            
+
             total += itemTotal;
             vector.add(String.valueOf(itemTotal));
 
@@ -83,7 +198,7 @@ public class Home extends javax.swing.JFrame {
         }
         jTextField2.setText(String.valueOf(total));
         //2
-//        calculate();
+        calculate();
 
     }
 
@@ -141,6 +256,18 @@ public class Home extends javax.swing.JFrame {
     public JLabel getStockIdLable() {
         return jLabel12;
     }
+    
+    //get UserType Lable
+    public JLabel getUserTypeLabel(){
+        return jLabel1;
+    }
+    
+    //get user name lable
+    public JLabel getUserNameLable(){
+        return jLabel2;
+    }
+    
+    
 
 /// Open custome registration jDialog
     public void OpenCustomerRegistration() {
@@ -167,6 +294,9 @@ public class Home extends javax.swing.JFrame {
 
         FlatSVGIcon icon2 = new FlatSVGIcon("resources//icon//power-off.svg", 20, 20);
         jButton1.setIcon(icon2);
+
+        FlatSVGIcon icon3 = new FlatSVGIcon("resources//iconWhite//barcode.svg", jLabel5.getWidth(), jLabel5.getHeight());
+        jLabel5.setIcon(icon3);
 
     }
 
@@ -231,6 +361,18 @@ public class Home extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jFormattedTextField3 = new javax.swing.JFormattedTextField();
+        jLabel29 = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jFormattedTextField4 = new javax.swing.JFormattedTextField();
+        jLabel30 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
@@ -362,7 +504,6 @@ public class Home extends javax.swing.JFrame {
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 204, 0));
-        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -394,7 +535,22 @@ public class Home extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(5).setResizable(false);
         }
 
-        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1086, 510));
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
 
@@ -516,14 +672,11 @@ public class Home extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -632,6 +785,120 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
+        jPanel5.setBackground(new java.awt.Color(153, 153, 153));
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel10.setText("Check Out");
+
+        jLabel14.setText("Add Discount to Full Bill :");
+
+        jFormattedTextField3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        jFormattedTextField3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jFormattedTextField3.setText("0.00");
+        jFormattedTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jFormattedTextField3KeyReleased(evt);
+            }
+        });
+
+        jLabel29.setText("Select Payment Method :");
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jCheckBox1.setText("Withdrow Customer Points");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        jFormattedTextField4.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        jFormattedTextField4.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jFormattedTextField4.setText("0.00");
+        jFormattedTextField4.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jFormattedTextField4KeyReleased(evt);
+            }
+        });
+
+        jLabel30.setText("PYMENT");
+
+        jTextField3.setEditable(false);
+        jTextField3.setEnabled(false);
+
+        jLabel31.setText("Balance");
+
+        jButton7.setText("C H E C K   O U T");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel14)
+                                    .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(54, 54, 54)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel29)
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(46, 46, 46)
+                                        .addComponent(jCheckBox1)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel30)
+                                    .addComponent(jFormattedTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel31)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(16, 16, 16))))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel30)
+                            .addComponent(jLabel31))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jFormattedTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                            .addComponent(jTextField3))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -641,7 +908,11 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField2)
@@ -658,9 +929,12 @@ public class Home extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(14, 14, 14))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(14, 14, 14))
         );
 
         pack();
@@ -771,17 +1045,100 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-       
-        if(evt.getClickCount() == 2){
+
+        if (evt.getClickCount() == 2) {
             int row = jTable1.getSelectedRow();
 //            ((DefaultTableModel)jTable1.getModel()).removeRow(row);
-                invoiceItemsMap.remove(jTable1.getValueAt(row,0));
-                addToInvoiceTable();
-                reset();
-                jButton4.grabFocus();
+            invoiceItemsMap.remove(jTable1.getValueAt(row, 0));
+            addToInvoiceTable();
+            reset();
+            jButton4.grabFocus();
         }
-        
+
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        try {
+
+            String invoiceID = jTextField1.getText();
+            String customerMobile = jTextField2.getText();
+            String employeeEmail = jLabel3.getText();
+            String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            String paidAmount = jFormattedTextField4.getText();
+            String paymentMethodID = paymentMethodsMap.get(String.valueOf(jComboBox1.getSelectedItem()));
+            String discount = String.valueOf(jFormattedTextField3.getText());
+
+            //insert to invoice
+            MySQL.execute("INSERT INTO `invoice` VALUES ('" + invoiceID + "', '" + employeeEmail + "', '" + customerMobile + "', "
+                    + "'" + paymentMethodID + "', '" + dateTime + "', '" + discount + "', '" + paidAmount + "')");
+            //insert to invoice
+
+            for (InvoiceItens invoiceItem : invoiceItemsMap.values()) {
+
+                // insert to invoice Item
+                MySQL.execute("INSERT INTO `invoice_item` (`stock_id`, `qty`, `invoice_id`)"
+                        + "VALUES ('" + invoiceItem.getStockID() + "', '" + invoiceItem.getQty() + "', '" + invoiceID + "')");
+
+                // update stock
+                MySQL.execute("UPDATE `stock` SET `qty` = `qty` - '" + invoiceItem.getQty() + "' WHERE `id` = '" + invoiceItem.getStockID() + "'");
+
+            }
+
+            Double points = Double.parseDouble(jFormattedTextField2.getText()) / 100;
+
+            // Withdrow points
+            if (withdrawPoints) {
+                newPoints += points;
+                MySQL.execute("UPDATE `custoner` SET `points` = '" + newPoints + "' WHERE `mobile` = '" + customerMobile + "' ");
+
+            } else {
+                MySQL.execute("UPDATE `custoner` SET `points` = `points` + '" + points + "' WHERE `mobile` = '" + customerMobile + "'");
+            }
+            // Withdrow points
+
+            //view Report or pint
+//            String path = "src//reports//P.jasper";
+            InputStream path = this.getClass().getResourceAsStream("/reports/P.jasper");
+
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("ShopMobile1", "0781203482");
+            params.put("ShopMobile2", "0112742220");
+            params.put("ShopAddress", "70/9, Kalalgoda, Pannipitiya.");
+            params.put("balance", jFormattedTextField3.getText());
+            params.put("payment", jFormattedTextField4.getText());
+            params.put("paymentMethod", String.valueOf(jComboBox1.getSelectedItem()));
+            params.put("discount", jFormattedTextField3.getText());
+            params.put("total", jFormattedTextField2.getText());
+            params.put("invoiceNo", jTextField1.getText());
+            params.put("dateTime", dateTime);
+            params.put("customer", jTextField2.getText());
+            params.put("employee", jLabel3.getText());
+
+//            JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable1.getModel());
+//
+//            JasperPrint jasperPrint = JasperFillManager.fillReport(path, params, dataSource);
+//
+//            JasperViewer.viewReport(jasperPrint, false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jFormattedTextField3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField3KeyReleased
+       calculate();
+    }//GEN-LAST:event_jFormattedTextField3KeyReleased
+
+    private void jFormattedTextField4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField4KeyReleased
+       calculate();
+    }//GEN-LAST:event_jFormattedTextField4KeyReleased
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -827,13 +1184,20 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JFormattedTextField jFormattedTextField2;
+    private javax.swing.JFormattedTextField jFormattedTextField3;
+    private javax.swing.JFormattedTextField jFormattedTextField4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -849,7 +1213,10 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -860,9 +1227,11 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }
