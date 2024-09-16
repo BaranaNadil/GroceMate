@@ -37,11 +37,13 @@ public class SignInDialog extends javax.swing.JDialog {
                     if (result.getString("employee_type_id").equals("1")) {
                         SplashWindow.home.getUserTypeLabel().setText("Cashier");
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
+                        SplashWindow.home.setEmployeeNIC(result.getString("nic"));
                         this.dispose();
                     } else {
 
                         SplashWindow.home.getUserTypeLabel().setText("Administrator");
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
+                        SplashWindow.home.setEmployeeNIC(result.getString("nic"));
                         this.dispose();
                         Home home = new Home();
                         home.adminchoose();

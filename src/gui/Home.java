@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,10 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.InvoiceItens;
 import model.MySQL;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class Home extends javax.swing.JFrame {
 
@@ -33,7 +38,7 @@ public class Home extends javax.swing.JFrame {
         loadPamentMethods();
         jButton5.grabFocus();
     }
-    
+
     ///load payment methods to jCombo box
     private void loadPamentMethods() {
 
@@ -57,8 +62,13 @@ public class Home extends javax.swing.JFrame {
         }
 
     }
-    
-    
+
+    /// employee email
+    String nic;
+
+    public void setEmployeeNIC(String nic) {
+        this.nic = nic;
+    }
 
     private void reset() {
 
@@ -72,6 +82,31 @@ public class Home extends javax.swing.JFrame {
 
     }
 
+    private void customerReset() {
+        jLabel22.setText("CUSTOMER NAME HEAR");
+        jLabel26.setText("CUSTOMER MOBILE HEAR");
+        jLabel23.setText("CUSTOMER EMAIL HEAR");
+        jLabel26.setText("CUSTOMER POINTS HEAR");
+
+    }
+
+    private void resetAllInvoice() {
+
+        reset();
+        customerReset();
+        jFormattedTextField3.setText("0.00");
+        jFormattedTextField4.setText("0.00");
+        jTextField3.setText("0.00");
+        
+        jTextField2.setText("0.00");
+
+        invoiceItemsMap.clear();
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+    }
+
     private Double total = 0.0;
     private double discount = 0;
     private double payment = 0;
@@ -79,9 +114,9 @@ public class Home extends javax.swing.JFrame {
     private double balance = 0;
     private String paymentMethod = "Select";
     private Double newPoints = 0.0;
-    
+
     /// calculate price to checkout 
-        private void calculate() {
+    private void calculate() {
 
         // discount
         if (jFormattedTextField3.getText().isEmpty()) {
@@ -156,8 +191,6 @@ public class Home extends javax.swing.JFrame {
         jTextField3.setText(String.valueOf(balance));
 
     }
-    
-    
 
     ////Add to invoice table
     private void addToInvoiceTable() {
@@ -256,18 +289,16 @@ public class Home extends javax.swing.JFrame {
     public JLabel getStockIdLable() {
         return jLabel12;
     }
-    
+
     //get UserType Lable
-    public JLabel getUserTypeLabel(){
+    public JLabel getUserTypeLabel() {
         return jLabel1;
     }
-    
+
     //get user name lable
-    public JLabel getUserNameLable(){
+    public JLabel getUserNameLable() {
         return jLabel2;
     }
-    
-    
 
 /// Open custome registration jDialog
     public void OpenCustomerRegistration() {
@@ -385,6 +416,12 @@ public class Home extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
 
         jButton1.setBackground(new java.awt.Color(255, 0, 51));
+
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -1010,37 +1047,62 @@ public class Home extends javax.swing.JFrame {
         String availabaleQty = jLabel15.getText();
         String discount = jFormattedTextField1.getText();
 
-        if (Double.parseDouble(qty) > Double.parseDouble(availabaleQty)) {
-            JOptionPane.showMessageDialog(this, "Insuficint Quntity", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else {
+// Define the date format
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-            InvoiceItens invoiceItem = new InvoiceItens();
-            invoiceItem.setStockID(stockID);
-            invoiceItem.setName(productName);
-            invoiceItem.setSellingPrice(sellingPrice);
-            invoiceItem.setQty(qty);
-            invoiceItem.setExp(exp);
-            invoiceItem.setDiscount(discount);
+        // Example expiration date
+//        String expDateStr = "2024-09-12";
+        try {
+            // Parse the expiration date
+            Date expDate = sdf.parse(exp);
 
-            if (invoiceItemsMap.get(stockID) == null) {
-                invoiceItemsMap.put(stockID, invoiceItem);
+            // Get the current date
+            Date currentDate = new Date();
 
+            // Compare the dates
+            if (currentDate.after(expDate) || currentDate.equals(expDate)) {
+                JOptionPane.showMessageDialog(this, "This product is Expierd.", "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
 
-                InvoiceItens found = invoiceItemsMap.get(jLabel12.getText());
+                if (Double.parseDouble(qty) > Double.parseDouble(availabaleQty)) {
+                    JOptionPane.showMessageDialog(this, "Insuficint Quntity", "Warning", JOptionPane.WARNING_MESSAGE);
+                } else {
 
-                int option = JOptionPane.showConfirmDialog(this, "Do You want to Update Quantity of product :" + productName);
+                    InvoiceItens invoiceItem = new InvoiceItens();
+                    invoiceItem.setStockID(stockID);
+                    invoiceItem.setName(productName);
+                    invoiceItem.setSellingPrice(sellingPrice);
+                    invoiceItem.setQty(qty);
+                    invoiceItem.setExp(exp);
+                    invoiceItem.setDiscount(discount);
 
-                if (option == JOptionPane.YES_OPTION) {
+                    if (invoiceItemsMap.get(stockID) == null) {
+                        invoiceItemsMap.put(stockID, invoiceItem);
 
-                    found.setQty(String.valueOf(Double.parseDouble(found.getQty()) + Double.parseDouble(qty)));
+                    } else {
 
+                        InvoiceItens found = invoiceItemsMap.get(jLabel12.getText());
+
+                        int option = JOptionPane.showConfirmDialog(this, "Do You want to Update Quantity of product :" + productName);
+
+                        if (option == JOptionPane.YES_OPTION) {
+
+                            found.setQty(String.valueOf(Double.parseDouble(found.getQty()) + Double.parseDouble(qty)));
+
+                        }
+
+                    }
                 }
 
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
         addToInvoiceTable();
+
         reset();
+
         jButton4.grabFocus();
     }//GEN-LAST:event_jButton6ActionPerformed
 
@@ -1065,31 +1127,31 @@ public class Home extends javax.swing.JFrame {
 
         try {
 
-            String invoiceID = jTextField1.getText();
-            String customerMobile = jTextField2.getText();
-            String employeeEmail = jLabel3.getText();
+            long invoiceID = genarateInvoiceID();
+            String customerMobile = jLabel26.getText();
+            String employeeEmail = jLabel2.getText();
             String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             String paidAmount = jFormattedTextField4.getText();
-            String paymentMethodID = paymentMethodsMap.get(String.valueOf(jComboBox1.getSelectedItem()));
+            String paymentMethodID = paymentMethodsMap.get(String.valueOf(jComboBox2.getSelectedItem()));
             String discount = String.valueOf(jFormattedTextField3.getText());
 
             //insert to invoice
-            MySQL.execute("INSERT INTO `invoice` VALUES ('" + invoiceID + "', '" + employeeEmail + "', '" + customerMobile + "', "
-                    + "'" + paymentMethodID + "', '" + dateTime + "', '" + discount + "', '" + paidAmount + "')");
+            MySQL.execute("INSERT INTO `invoice` VALUES ('" + invoiceID + "', '" + customerMobile + "', '" + nic + "', "
+                    + "'" + paymentMethodID + "', '" + paidAmount + "', '" + dateTime + "', '" + discount + "')");
             //insert to invoice
 
             for (InvoiceItens invoiceItem : invoiceItemsMap.values()) {
 
                 // insert to invoice Item
-                MySQL.execute("INSERT INTO `invoice_item` (`stock_id`, `qty`, `invoice_id`)"
-                        + "VALUES ('" + invoiceItem.getStockID() + "', '" + invoiceItem.getQty() + "', '" + invoiceID + "')");
+                MySQL.execute("INSERT INTO `invoice_item` (`stock_id`, `qty`, `invoice_id`, `measurement_id`)"
+                        + "VALUES ('" + invoiceItem.getStockID() + "', '" + invoiceItem.getQty() + "', '" + invoiceID + "', '1')");
 
                 // update stock
-                MySQL.execute("UPDATE `stock` SET `qty` = `qty` - '" + invoiceItem.getQty() + "' WHERE `id` = '" + invoiceItem.getStockID() + "'");
+                MySQL.execute("UPDATE `stock` SET `quantity` = `quantity` - '" + invoiceItem.getQty() + "' WHERE `id` = '" + invoiceItem.getStockID() + "'");
 
             }
 
-            Double points = Double.parseDouble(jFormattedTextField2.getText()) / 100;
+            Double points = Double.parseDouble(jTextField2.getText()) / 100;
 
             // Withdrow points
             if (withdrawPoints) {
@@ -1097,48 +1159,52 @@ public class Home extends javax.swing.JFrame {
                 MySQL.execute("UPDATE `custoner` SET `points` = '" + newPoints + "' WHERE `mobile` = '" + customerMobile + "' ");
 
             } else {
-                MySQL.execute("UPDATE `custoner` SET `points` = `points` + '" + points + "' WHERE `mobile` = '" + customerMobile + "'");
+                MySQL.execute("UPDATE `customes` SET `points` = `points` + '" + points + "' WHERE `mobile` = '" + customerMobile + "'");
             }
             // Withdrow points
 
             //view Report or pint
 //            String path = "src//reports//P.jasper";
-            InputStream path = this.getClass().getResourceAsStream("/reports/P.jasper");
+            InputStream path = this.getClass().getResourceAsStream("/reports/bill_one_E.jasper");
 
             HashMap<String, Object> params = new HashMap<>();
-            params.put("ShopMobile1", "0781203482");
-            params.put("ShopMobile2", "0112742220");
-            params.put("ShopAddress", "70/9, Kalalgoda, Pannipitiya.");
-            params.put("balance", jFormattedTextField3.getText());
-            params.put("payment", jFormattedTextField4.getText());
-            params.put("paymentMethod", String.valueOf(jComboBox1.getSelectedItem()));
-            params.put("discount", jFormattedTextField3.getText());
-            params.put("total", jFormattedTextField2.getText());
-            params.put("invoiceNo", jTextField1.getText());
+            params.put("billNo", String.valueOf(invoiceID) );
             params.put("dateTime", dateTime);
-            params.put("customer", jTextField2.getText());
-            params.put("employee", jLabel3.getText());
+            params.put("custonerNo", customerMobile);
+            params.put("GrandTotal", jTextField2.getText());
+            params.put("cash", paidAmount);
+            params.put("paymentMethod", String.valueOf(jComboBox1.getSelectedItem()));
+            params.put("balance", jTextField3.getText());
+            params.put("numberOfPro", String.valueOf(invoiceItemsMap.size()));
+            params.put("savings", discount);
+            params.put("productName", jLabel7.getText());
 
-//            JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable1.getModel());
+
+
+            JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable1.getModel());
 //
-//            JasperPrint jasperPrint = JasperFillManager.fillReport(path, params, dataSource);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(path, params, dataSource);
 //
-//            JasperViewer.viewReport(jasperPrint, false);
+            JasperViewer.viewReport(jasperPrint, false);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        resetAllInvoice();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jFormattedTextField3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField3KeyReleased
-       calculate();
+        calculate();
     }//GEN-LAST:event_jFormattedTextField3KeyReleased
 
     private void jFormattedTextField4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField4KeyReleased
-       calculate();
+        calculate();
     }//GEN-LAST:event_jFormattedTextField4KeyReleased
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        adminchoose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -1151,16 +1217,24 @@ public class Home extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -1234,4 +1308,10 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
+
+    private long genarateInvoiceID() {
+        long id = System.currentTimeMillis();
+        return id;
+    }
+
 }
