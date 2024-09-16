@@ -5,10 +5,7 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 //import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import gui.Home;
 
-/**
- *
- * @author User
- */
+
 public class SplashWindow extends javax.swing.JFrame {
 
     public static SplashWindow splashWindow;

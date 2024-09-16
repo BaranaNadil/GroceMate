@@ -30,6 +30,8 @@ public class Home extends javax.swing.JFrame {
     HashMap<String, String> paymentMethodsMap = new HashMap<>();
 
     public boolean customerSelecterd;
+    
+    public int userType;
 
     public Home() {
         initComponents();
@@ -338,9 +340,9 @@ public class Home extends javax.swing.JFrame {
 
     }
 
-    public void adminchoose() {
+    public void adminchoose(int userType) {
 
-        AdminChoose choose = new AdminChoose(this, true);
+        AdminChoose choose = new AdminChoose(this, true, userType);
         choose.setVisible(true);
 
     }
@@ -1203,7 +1205,7 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_jFormattedTextField4KeyReleased
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        adminchoose();
+        adminchoose(userType);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public static void main(String args[]) {

@@ -2,12 +2,29 @@ package gui;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import model.MySQL;
 
+import java.util.logging.Logger;
+import java.util.logging.FileHandler;
+
 public class SignInDialog extends javax.swing.JDialog {
+    
+    public static Logger logger = Logger.getLogger("GroceMate");
+    
+    private void fileHandle() {
+    try {
+        FileHandler fileHandler = new FileHandler("log.log", true);
+//        fileHandler.setFormatter(new SimpleFormatter()); // Assuming you meant SimpleFormatter
+        logger.addHandler(fileHandler);
+    } catch (IOException e) {
+//        logger.log(Level.SEVERE, "FileHandler error", e);
+    }
+}   
+    
 
     public SignInDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -38,15 +55,17 @@ public class SignInDialog extends javax.swing.JDialog {
                         SplashWindow.home.getUserTypeLabel().setText("Cashier");
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         SplashWindow.home.setEmployeeNIC(result.getString("nic"));
+                        SplashWindow.home.userType = 1;
                         this.dispose();
                     } else {
 
                         SplashWindow.home.getUserTypeLabel().setText("Administrator");
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         SplashWindow.home.setEmployeeNIC(result.getString("nic"));
+                        SplashWindow.home.userType = 2;
                         this.dispose();
                         Home home = new Home();
-                        home.adminchoose();
+                        home.adminchoose(2);
                     }
 
                 } else {
