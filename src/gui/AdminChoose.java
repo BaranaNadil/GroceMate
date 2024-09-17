@@ -129,7 +129,9 @@ public class AdminChoose extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
+        SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to Cashier End.");
         this.dispose();
+        
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -138,6 +140,7 @@ public class AdminChoose extends javax.swing.JDialog {
         this.dispose();
         SplashWindow.home.dispose();
         AdminDashboard dashbord = new AdminDashboard();
+        SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to admin Dashbord.");
         dashbord.setVisible(true);
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -165,7 +168,7 @@ public class AdminChoose extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1KeyReleased
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to Register New Arival Googs Window.");
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton3KeyReleased

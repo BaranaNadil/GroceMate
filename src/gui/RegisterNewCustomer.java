@@ -245,10 +245,12 @@ public class RegisterNewCustomer extends javax.swing.JDialog {
                         MySQL.execute("UPDATE `customes` SET `first_name` = '" + fname + "', `last_name` = '" + lname + "', `email` = '" + email + "', `nic` = '" + nic + "' WHERE `mobile` = '" + mobile + "' ");
                     }
                     JOptionPane.showMessageDialog(this, "Customer Updated", "Information", JOptionPane.INFORMATION_MESSAGE);
+                    SignInDialog.logger.info("New CUSTOMER Ditails UPDATED. Customer_name :" + fname + " " + lname);
                     resetFilds();
                 } else {
                     MySQL.execute("INSERT INTO `customes` VALUES ('" + mobile + "', '" + fname + "', '" + lname + "', '" + email + "', '" + nic + "', '0', '" + genderMap.get(gender) + "')");
                     JOptionPane.showMessageDialog(this, "Customer Registerd successfully", "Information", JOptionPane.INFORMATION_MESSAGE);
+                    SignInDialog.logger.info("New CUSTOMER Registerd. Customer_name :" + fname + " " + lname);
                     resetFilds();
                 }
 

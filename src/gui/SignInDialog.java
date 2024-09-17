@@ -7,23 +7,13 @@ import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import model.MySQL;
-
+import model.POSLogger;
 import java.util.logging.Logger;
-import java.util.logging.FileHandler;
+
 
 public class SignInDialog extends javax.swing.JDialog {
     
-    public static Logger logger = Logger.getLogger("GroceMate");
-    
-    private void fileHandle() {
-    try {
-        FileHandler fileHandler = new FileHandler("log.log", true);
-//        fileHandler.setFormatter(new SimpleFormatter()); // Assuming you meant SimpleFormatter
-        logger.addHandler(fileHandler);
-    } catch (IOException e) {
-//        logger.log(Level.SEVERE, "FileHandler error", e);
-    }
-}   
+  public static final Logger logger = POSLogger.getLogger();
     
 
     public SignInDialog(java.awt.Frame parent, boolean modal) {
@@ -40,9 +30,11 @@ public class SignInDialog extends javax.swing.JDialog {
 
         if (email.isBlank()) {
             JOptionPane.showMessageDialog(this, "Please Enter Your Email", "Warning", JOptionPane.WARNING_MESSAGE);
+            logger.warning("User try to login to system wothout enter email address.");
             jTextField1.grabFocus();
         } else if (password.isBlank()) {
             JOptionPane.showMessageDialog(this, "Please Enter Your Password", "Warning", JOptionPane.WARNING_MESSAGE);
+            logger.warning("User try to login to system wothout enter Password.");
             jPasswordField1.grabFocus();
         } else {
 
@@ -56,6 +48,7 @@ public class SignInDialog extends javax.swing.JDialog {
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         SplashWindow.home.setEmployeeNIC(result.getString("nic"));
                         SplashWindow.home.userType = 1;
+                        logger.info("Cashier " + result.getString("first_name") + " "+result.getString("last_name")+ " Log In to the System" );
                         this.dispose();
                     } else {
 
@@ -63,6 +56,7 @@ public class SignInDialog extends javax.swing.JDialog {
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         SplashWindow.home.setEmployeeNIC(result.getString("nic"));
                         SplashWindow.home.userType = 2;
+                        logger.info("Admin " + result.getString("first_name") + " "+result.getString("last_name")+ " Log In to the System" );
                         this.dispose();
                         Home home = new Home();
                         home.adminchoose(2);
@@ -70,10 +64,12 @@ public class SignInDialog extends javax.swing.JDialog {
 
                 } else {
                     JOptionPane.showMessageDialog(this, "Invalid Email or Password", "Warning", JOptionPane.WARNING_MESSAGE);
+                    logger.warning("User Enterd Invalid email or password.");
                 }
 
             } catch (SQLException e) {
                 e.printStackTrace();
+                logger.severe("System gets SqlException : " + e.getMessage() );
             }
 
         }

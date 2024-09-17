@@ -249,6 +249,11 @@ public class CustomerManegement extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Without Customer");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("ADD New Customer");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -367,7 +372,7 @@ public class CustomerManegement extends javax.swing.JDialog {
 
                     this.dispose();
                     home.getProductSelectButton().grabFocus();
-
+                    SignInDialog.logger.info("Registerd Customer SELECTED. customer_name : " + home.getCustomerNameLable().getText() );
                 } else {
                     jButton1.grabFocus();
                 }
@@ -379,6 +384,10 @@ public class CustomerManegement extends javax.swing.JDialog {
 
 
     }//GEN-LAST:event_jTable1KeyReleased
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+      SignInDialog.logger.info("New Not REGISTERD customer contine");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

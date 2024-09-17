@@ -1,6 +1,7 @@
 package gui;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.awt.SplashScreen;
 import java.awt.event.KeyEvent;
 import java.io.InputStream;
 import java.sql.ResultSet;
@@ -1064,6 +1065,7 @@ public class Home extends javax.swing.JFrame {
             // Compare the dates
             if (currentDate.after(expDate) || currentDate.equals(expDate)) {
                 JOptionPane.showMessageDialog(this, "This product is Expierd.", "Warning", JOptionPane.WARNING_MESSAGE);
+                SignInDialog.logger.warning("Expierd product founded. Stock_ID : " + stockID + " Product Name : " + productName );
             } else {
 
                 if (Double.parseDouble(qty) > Double.parseDouble(availabaleQty)) {
@@ -1181,7 +1183,7 @@ public class Home extends javax.swing.JFrame {
             params.put("savings", discount);
             params.put("productName", jLabel7.getText());
 
-
+            SignInDialog.logger.info("CHECKOUT DONE !, invoice ID : " + invoiceID  );
 
             JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable1.getModel());
 //

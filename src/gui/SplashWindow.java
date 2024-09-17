@@ -6,6 +6,7 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import gui.Home;
 
 
+
 public class SplashWindow extends javax.swing.JFrame {
 
     public static SplashWindow splashWindow;
@@ -53,7 +54,7 @@ public class SplashWindow extends javax.swing.JFrame {
                         case 23:
                             jLabel1.setText("File Loaded");
                             break;
-
+                            
                         case 25:
                             jLabel1.setText("Finding Libraries . . . .");
                             break;
