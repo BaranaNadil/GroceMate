@@ -19,7 +19,7 @@ public class MySQL{
             
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 
-                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "ravindurukshan");
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "barananadil");
                 
             }catch(ClassNotFoundException e){
                 e.printStackTrace();
