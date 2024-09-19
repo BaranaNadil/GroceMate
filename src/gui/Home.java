@@ -66,7 +66,7 @@ public class Home extends javax.swing.JFrame {
 
     }
 
-    /// employee email
+    /// employee NIC
     String nic;
 
     public void setEmployeeNIC(String nic) {
@@ -317,7 +317,7 @@ public class Home extends javax.swing.JFrame {
 
     ///Open select product jDialog
     private void openProductSelectWindow() {
-        SelectProduct selectProduct = new SelectProduct(this, true);
+        SelectProductStock selectProduct = new SelectProductStock(this, true);
         selectProduct.setVisible(true);
     }
 

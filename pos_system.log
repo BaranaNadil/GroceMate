@@ -10,3 +10,125 @@ Sep 17, 2024 9:38:33 AM gui.SignInDialog signIn
 WARNING: User Enterd Invalid email or password.
 Sep 17, 2024 9:38:36 AM gui.SignInDialog signIn
 INFO: Admin Barana Nadil Log In to the System
+Sep 18, 2024 1:31:33 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 18, 2024 1:31:42 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 18, 2024 1:31:50 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 18, 2024 1:31:53 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 18, 2024 1:32:28 PM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to admin Dashbord.
+Sep 18, 2024 1:43:44 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 18, 2024 1:43:47 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 18, 2024 1:52:55 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 18, 2024 2:15:34 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 18, 2024 2:15:38 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 18, 2024 3:08:27 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 18, 2024 3:08:44 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 18, 2024 3:09:06 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 18, 2024 3:11:02 PM gui.Home jButton7ActionPerformed
+INFO: CHECKOUT DONE !, invoice ID : 1726652462141
+Sep 18, 2024 6:37:32 PM gui.SelectProduct jButton3ActionPerformed
+INFO: Tikiri Marie(360g)
+Sep 18, 2024 6:41:11 PM gui.SelectProduct jButton3ActionPerformed
+INFO: New Product Added : Choc Shock (90g)
+Sep 18, 2024 7:48:50 PM gui.SelectProduct jButton1ActionPerformed
+INFO: Product Updated. ProductID : 8
+Sep 18, 2024 8:00:44 PM gui.SelectProduct jButton3ActionPerformed
+INFO: New Product Added : Tikiri Marie(80)
+Sep 18, 2024 8:01:02 PM gui.SelectProduct jButton1ActionPerformed
+INFO: Product Updated. ProductID : 10
+Sep 19, 2024 10:41:20 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 10:43:40 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 10:43:43 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 10:45:32 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 10:45:34 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 10:49:43 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 10:49:46 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 10:54:39 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 10:54:41 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 10:55:39 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 10:55:42 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 12:46:34 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 12:46:38 PM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to admin Dashbord.
+Sep 19, 2024 12:47:40 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 12:47:45 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 2:40:28 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 2:41:45 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 3:29:36 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 3:29:38 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 5:48:39 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 5:48:41 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 5:57:08 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 5:57:11 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 6:01:45 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 6:01:47 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 6:08:01 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 6:08:03 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 6:09:49 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 6:09:52 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 6:13:31 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 6:13:35 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 6:18:33 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 6:18:36 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 6:33:24 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 6:33:26 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 9:37:52 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 9:37:59 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 10:55:39 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 10:55:44 PM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 19, 2024 10:58:56 PM gui.AddNewGrn jButton5ActionPerformed
+INFO: Exist stock Updated. stock ID : 4
+Sep 19, 2024 10:59:05 PM gui.AddNewGrn jButton5ActionPerformed
+INFO: Exist stock Updated. stock ID : 5
+Sep 19, 2024 10:59:12 PM gui.AddNewGrn jButton5ActionPerformed
+INFO: Exist stock Updated. stock ID : 6

@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 public class SignInDialog extends javax.swing.JDialog {
     
   public static final Logger logger = POSLogger.getLogger();
+  
+  public static String employeeNIC;
     
 
     public SignInDialog(java.awt.Frame parent, boolean modal) {
@@ -47,6 +49,7 @@ public class SignInDialog extends javax.swing.JDialog {
                         SplashWindow.home.getUserTypeLabel().setText("Cashier");
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         SplashWindow.home.setEmployeeNIC(result.getString("nic"));
+                        SignInDialog.employeeNIC = result.getString("nic");
                         SplashWindow.home.userType = 1;
                         logger.info("Cashier " + result.getString("first_name") + " "+result.getString("last_name")+ " Log In to the System" );
                         this.dispose();
@@ -55,6 +58,7 @@ public class SignInDialog extends javax.swing.JDialog {
                         SplashWindow.home.getUserTypeLabel().setText("Administrator");
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         SplashWindow.home.setEmployeeNIC(result.getString("nic"));
+                        SignInDialog.employeeNIC = result.getString("nic");
                         SplashWindow.home.userType = 2;
                         logger.info("Admin " + result.getString("first_name") + " "+result.getString("last_name")+ " Log In to the System" );
                         this.dispose();

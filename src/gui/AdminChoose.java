@@ -14,17 +14,14 @@ public class AdminChoose extends javax.swing.JDialog {
         this.userType = userType;
         identifyUser();
     }
-    
-    
-    private void identifyUser(){
-    
-        if(userType == 1){
+
+    private void identifyUser() {
+
+        if (userType == 1) {
             jButton1.setEnabled(false);
         }
-    
+
     }
-    
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -130,8 +127,14 @@ public class AdminChoose extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to Cashier End.");
-        this.dispose();
-        
+        if (SplashWindow.home == null) {
+            SplashWindow.home = new Home();
+            SplashWindow.home.setVisible(true);
+        } else {
+            System.out.println("Ok");
+            this.dispose();
+        }
+
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -141,6 +144,8 @@ public class AdminChoose extends javax.swing.JDialog {
         SplashWindow.home.dispose();
         AdminDashboard dashbord = new AdminDashboard();
         SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to admin Dashbord.");
+        SplashWindow.home = null;
+        System.gc();
         dashbord.setVisible(true);
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -168,13 +173,18 @@ public class AdminChoose extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1KeyReleased
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        SplashWindow.home.dispose();
+        System.gc();
+        AddNewGrn grn = new AddNewGrn();
+        grn.setVisible(true);
         SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to Register New Arival Googs Window.");
+        SplashWindow.home = null;
+        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton3KeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3KeyReleased
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
