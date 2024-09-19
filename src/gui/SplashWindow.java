@@ -14,6 +14,12 @@ public class SplashWindow extends javax.swing.JFrame {
  
     public static Home home ;
     
+    
+    public static AddNewGrn grn;
+    
+    
+    public static AdminDashboard admin;
+    
     public SplashWindow() {
         initComponents();
         setSvg();

@@ -384,6 +384,12 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(0, 102, 102));
 
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1690,6 +1696,10 @@ public class AdminDashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel60MouseExited
 
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+      adminchoose(SignInDialog.userType);
+    }//GEN-LAST:event_jLabel1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -1880,5 +1890,17 @@ public class AdminDashboard extends javax.swing.JFrame {
                 break;
         }
     }
+    
+    
+    /////open admin choose window
+     public void adminchoose(int userType) {
+
+        AdminChoose choose = new AdminChoose(this, true, userType);
+        choose.setVisible(true);
+
+    }
+    /////open admin choose window
+    
+    
 
 }

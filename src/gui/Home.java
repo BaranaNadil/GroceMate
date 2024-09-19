@@ -22,6 +22,7 @@ import model.InvoiceItens;
 import model.MySQL;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -32,7 +33,6 @@ public class Home extends javax.swing.JFrame {
 
     public boolean customerSelecterd;
     
-    public int userType;
 
     public Home() {
         initComponents();
@@ -846,6 +846,11 @@ public class Home extends javax.swing.JFrame {
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jCheckBox1.setText("Withdrow Customer Points");
+        jCheckBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBox1ItemStateChanged(evt);
+            }
+        });
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox1ActionPerformed(evt);
@@ -1124,7 +1129,7 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -1147,8 +1152,8 @@ public class Home extends javax.swing.JFrame {
             for (InvoiceItens invoiceItem : invoiceItemsMap.values()) {
 
                 // insert to invoice Item
-                MySQL.execute("INSERT INTO `invoice_item` (`stock_id`, `qty`, `invoice_id`, `measurement_id`)"
-                        + "VALUES ('" + invoiceItem.getStockID() + "', '" + invoiceItem.getQty() + "', '" + invoiceID + "', '1')");
+                MySQL.execute("INSERT INTO `invoice_item` (`stock_id`, `qty`, `invoice_id`)"
+                        + "VALUES ('" + invoiceItem.getStockID() + "', '" + invoiceItem.getQty() + "', '" + invoiceID + "' )");
 
                 // update stock
                 MySQL.execute("UPDATE `stock` SET `quantity` = `quantity` - '" + invoiceItem.getQty() + "' WHERE `id` = '" + invoiceItem.getStockID() + "'");
@@ -1160,7 +1165,7 @@ public class Home extends javax.swing.JFrame {
             // Withdrow points
             if (withdrawPoints) {
                 newPoints += points;
-                MySQL.execute("UPDATE `custoner` SET `points` = '" + newPoints + "' WHERE `mobile` = '" + customerMobile + "' ");
+                MySQL.execute("UPDATE `customes` SET `points` = '" + newPoints + "' WHERE `mobile` = '" + customerMobile + "' ");
 
             } else {
                 MySQL.execute("UPDATE `customes` SET `points` = `points` + '" + points + "' WHERE `mobile` = '" + customerMobile + "'");
@@ -1190,6 +1195,9 @@ public class Home extends javax.swing.JFrame {
             JasperPrint jasperPrint = JasperFillManager.fillReport(path, params, dataSource);
 //
             JasperViewer.viewReport(jasperPrint, false);
+            
+            JasperPrintManager.printReport(jasperPrint, true);
+            
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -1207,8 +1215,12 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_jFormattedTextField4KeyReleased
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        adminchoose(userType);
+        adminchoose(SignInDialog.userType);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBox1ItemStateChanged
+      calculate();
+    }//GEN-LAST:event_jCheckBox1ItemStateChanged
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

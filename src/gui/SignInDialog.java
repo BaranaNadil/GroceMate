@@ -16,7 +16,8 @@ public class SignInDialog extends javax.swing.JDialog {
   public static final Logger logger = POSLogger.getLogger();
   
   public static String employeeNIC;
-    
+   public static int userType; 
+   public static String userName;
 
     public SignInDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -50,7 +51,8 @@ public class SignInDialog extends javax.swing.JDialog {
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         SplashWindow.home.setEmployeeNIC(result.getString("nic"));
                         SignInDialog.employeeNIC = result.getString("nic");
-                        SplashWindow.home.userType = 1;
+                        SignInDialog.userType= 1;
+                        SignInDialog.userName= result.getString("first_name") + " " + result.getString("last_name");
                         logger.info("Cashier " + result.getString("first_name") + " "+result.getString("last_name")+ " Log In to the System" );
                         this.dispose();
                     } else {
@@ -59,11 +61,12 @@ public class SignInDialog extends javax.swing.JDialog {
                         SplashWindow.home.getUserNameLable().setText(result.getString("first_name") + " " + result.getString("last_name"));
                         SplashWindow.home.setEmployeeNIC(result.getString("nic"));
                         SignInDialog.employeeNIC = result.getString("nic");
-                        SplashWindow.home.userType = 2;
+                        SignInDialog.userType= 2;
+                        SignInDialog.userName= result.getString("first_name") + " " + result.getString("last_name");
                         logger.info("Admin " + result.getString("first_name") + " "+result.getString("last_name")+ " Log In to the System" );
                         this.dispose();
                         Home home = new Home();
-                        home.adminchoose(2);
+                        home.adminchoose(SignInDialog.userType);
                     }
 
                 } else {

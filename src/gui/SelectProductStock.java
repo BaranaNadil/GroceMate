@@ -25,8 +25,10 @@ public class SelectProductStock extends javax.swing.JDialog {
             ResultSet result = MySQL.execute("SELECT * FROM `stock` "
                     + "INNER JOIN `prodect` ON `stock`.`prodect_id` = `prodect`.`id`"
                     + "INNER JOIN `brand` ON `brand`.`id` = `prodect`.`brand_id`"
-                    + "INNER JOIN `measurement` ON `stock`.`measurement_id` = `measurement`.`id` "
-                    + "WHERE `prodect`.`name` LIKE '" + name + "%'");
+                    + " WHERE `prodect`.`name` LIKE '" + name + "%'");
+            
+            /////////////////////////[  INNER JOIN `measurement` ON `stock`.`measurement_id` = `measurement`.`id` ] /////////////////////////
+            
             
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
@@ -38,7 +40,7 @@ public class SelectProductStock extends javax.swing.JDialog {
                 vector.add(result.getString("name"));
                 vector.add(result.getString("brand.name"));
                 vector.add(result.getString("quantity"));
-                vector.add(result.getString("measurement.name"));
+//                vector.add(result.getString("measurement.name"));
                 vector.add(result.getString("mfd"));
                 vector.add(result.getString("exp"));
                 vector.add(result.getString("price"));
@@ -60,7 +62,6 @@ public class SelectProductStock extends javax.swing.JDialog {
             ResultSet result = MySQL.execute("SELECT * FROM `stock` "
                     + "INNER JOIN `prodect` ON `stock`.`prodect_id` = `prodect`.`id`"
                     + "INNER JOIN `brand` ON `brand`.`id` = `prodect`.`brand_id`"
-                    + "INNER JOIN `measurement` ON `stock`.`measurement_id` = `measurement`.`id` "
                     + "WHERE `prodect`.`name` LIKE '" + barcode + "%'");
             
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -73,7 +74,7 @@ public class SelectProductStock extends javax.swing.JDialog {
                 vector.add(result.getString("name"));
                 vector.add(result.getString("brand.name"));
                 vector.add(result.getString("quantity"));
-                vector.add(result.getString("measurement.name"));
+//                vector.add(result.getString("measurement.name"));
                 vector.add(result.getString("mfd"));
                 vector.add(result.getString("exp"));
                 vector.add(result.getString("price"));
@@ -130,17 +131,17 @@ public class SelectProductStock extends javax.swing.JDialog {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "barcode", "Title", "Brand", "Available Quantity", "Unit", "MFD", "EXP", "Price"
+                "barcode", "Title", "Brand", "Available Quantity", "MFD", "EXP", "Price"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -148,6 +149,9 @@ public class SelectProductStock extends javax.swing.JDialog {
             }
         });
         jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTable1KeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTable1KeyReleased(evt);
             }
@@ -237,20 +241,21 @@ public class SelectProductStock extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextField2KeyReleased
 
     private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
-        
+       
+
+    }//GEN-LAST:event_jTable1KeyReleased
+
+    private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
+        int row = jTable1.getSelectedRow();
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            
-            System.out.println("Ok");
-            
-            int row = jTable1.getSelectedRow();
-            System.out.println(row);
+
             
             if (row >= 0) {
                 
                 home.getProductNameJLable().setText(String.valueOf(jTable1.getValueAt(row, 1)));
                 home.getProductAvailableQuntityJLble().setText(String.valueOf(jTable1.getValueAt(row, 3)));
-                home.getProductsellingPriceJLable().setText(String.valueOf(jTable1.getValueAt(row, 7)));
-                home.getEXPjLble().setText(String.valueOf(jTable1.getValueAt(row, 6)));
+                home.getProductsellingPriceJLable().setText(String.valueOf(jTable1.getValueAt(row, 6)));
+                home.getEXPjLble().setText(String.valueOf(jTable1.getValueAt(row, 5)));
                 home.getStockIdLable().setText(String.valueOf(jTable1.getValueAt(row,0)));
                 
                 this.dispose();
@@ -261,8 +266,7 @@ public class SelectProductStock extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this, "Please Select a Product to cuntine", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         }
-
-    }//GEN-LAST:event_jTable1KeyReleased
+    }//GEN-LAST:event_jTable1KeyPressed
 
     /**
      * @param args the command line arguments

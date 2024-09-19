@@ -126,27 +126,51 @@ public class AdminChoose extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
-        SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to Cashier End.");
+        if (SplashWindow.admin != null) {
+            SplashWindow.admin.dispose();
+            SplashWindow.admin = null;
+        }
+
+        if (SplashWindow.grn != null) {
+            SplashWindow.grn.dispose();
+            SplashWindow.grn = null;
+        }
+
         if (SplashWindow.home == null) {
             SplashWindow.home = new Home();
             SplashWindow.home.setVisible(true);
+            this.dispose();
         } else {
             System.out.println("Ok");
             this.dispose();
         }
-
-
+        System.gc();
+        SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to Cashier End.");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        this.dispose();
-        SplashWindow.home.dispose();
-        AdminDashboard dashbord = new AdminDashboard();
-        SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to admin Dashbord.");
-        SplashWindow.home = null;
+        if (SplashWindow.grn != null) {
+            SplashWindow.grn.dispose();
+            SplashWindow.grn = null;
+        }
+
+        if (SplashWindow.home != null) {
+            SplashWindow.home.dispose();
+            SplashWindow.home = null;
+        }
+
+        if (SplashWindow.admin == null) {
+            SplashWindow.admin = new AdminDashboard();
+            SplashWindow.admin.setVisible(true);
+            this.dispose();
+        } else {
+            this.dispose();
+        }
+        SignInDialog.logger.info("User :" + SignInDialog.userName + " select to go to Admin Pannel .");
+
         System.gc();
-        dashbord.setVisible(true);
+
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -173,13 +197,27 @@ public class AdminChoose extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1KeyReleased
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        SplashWindow.home.dispose();
+        if (SplashWindow.admin != null) {
+            SplashWindow.admin.dispose();
+            SplashWindow.admin = null;
+        }
+
+        if (SplashWindow.home != null) {
+            SplashWindow.home.dispose();
+            SplashWindow.home = null;
+        }
+
+        if (SplashWindow.grn == null) {
+            SplashWindow.grn = new AddNewGrn();
+            SplashWindow.grn.setVisible(true);
+            this.dispose();
+        } else {
+            this.dispose();
+        }
+
+        SignInDialog.logger.info("User :" + SignInDialog.userName + " select to go to Register New Arival Googs Window.");
+
         System.gc();
-        AddNewGrn grn = new AddNewGrn();
-        grn.setVisible(true);
-        SignInDialog.logger.info("User :" + SplashWindow.home.getUserNameLable().getText() + " select to go to Register New Arival Googs Window.");
-        SplashWindow.home = null;
-        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton3KeyReleased

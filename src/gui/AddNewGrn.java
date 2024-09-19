@@ -24,6 +24,8 @@ import model.MySQL;
 public class AddNewGrn extends javax.swing.JFrame {
 
     HashMap<String, GrnItems> grnItemMap = new HashMap<>();
+    
+    int userType;
 
     public AddNewGrn() {
 
@@ -143,6 +145,19 @@ public class AddNewGrn extends javax.swing.JFrame {
         System.out.println(SignInDialog.employeeNIC);
     }
     //seting employee ditails
+    
+    
+    
+    //open CHoosing window
+    public void adminchoose(int userType) {
+
+        AdminChoose choose = new AdminChoose(this, true, userType);
+        choose.setVisible(true);
+
+    }
+    //open CHoosing window
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -207,6 +222,12 @@ public class AddNewGrn extends javax.swing.JFrame {
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
             }
         });
 
@@ -816,6 +837,12 @@ public class AddNewGrn extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jFormattedTextField4KeyReleased
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+       
+        adminchoose(SignInDialog.userType);
+        
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments

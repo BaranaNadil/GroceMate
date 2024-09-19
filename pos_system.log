@@ -132,3 +132,137 @@ Sep 19, 2024 10:59:05 PM gui.AddNewGrn jButton5ActionPerformed
 INFO: Exist stock Updated. stock ID : 5
 Sep 19, 2024 10:59:12 PM gui.AddNewGrn jButton5ActionPerformed
 INFO: Exist stock Updated. stock ID : 6
+Sep 19, 2024 11:26:33 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 11:26:43 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 19, 2024 11:27:03 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 19, 2024 11:32:31 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 11:32:35 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 19, 2024 11:32:42 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 19, 2024 11:38:43 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 11:38:47 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 19, 2024 11:38:52 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 19, 2024 11:44:02 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 11:44:05 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 19, 2024 11:44:11 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 19, 2024 11:46:06 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 19, 2024 11:46:09 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 19, 2024 11:46:15 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 12:05:23 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 12:05:26 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 12:05:32 AM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 12:08:10 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 12:08:13 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 12:08:18 AM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 12:11:34 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 12:11:36 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 12:11:42 AM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 12:12:41 AM gui.Home jButton7ActionPerformed
+INFO: CHECKOUT DONE !, invoice ID : 1726771361666
+Sep 20, 2024 12:13:44 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 12:16:10 AM gui.AddNewGrn jButton5ActionPerformed
+INFO: New stock added. stock ID : 
+Sep 20, 2024 12:16:11 AM gui.AddNewGrn jButton5ActionPerformed
+INFO: New stock added. stock ID : 
+Sep 20, 2024 12:40:28 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 12:40:32 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 12:40:36 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 12:42:24 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 12:42:28 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 12:42:31 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 12:42:36 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 12:43:54 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 12:43:58 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 12:44:01 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 12:44:05 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 1:08:01 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 1:08:03 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 1:09:11 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 1:09:16 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 1:09:22 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 1:09:31 AM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 1:10:04 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 1:10:08 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 1:10:11 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 1:10:17 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 1:10:19 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 1:10:21 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 1:10:23 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 1:10:25 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 1:10:29 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 1:10:45 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 1:10:55 AM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 1:16:53 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 1:17:29 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 1:17:31 AM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 20, 2024 1:17:35 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 1:17:43 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 1:19:19 AM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 1:19:21 AM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 20, 2024 1:19:26 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 1:19:29 AM gui.AdminChoose jButton3ActionPerformed
+INFO: User :Barana Nadil select to go to Register New Arival Googs Window.
+Sep 20, 2024 1:19:32 AM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 20, 2024 1:19:36 AM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
