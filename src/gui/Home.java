@@ -347,6 +347,7 @@ public class Home extends javax.swing.JFrame {
         choose.setVisible(true);
 
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -1138,15 +1139,19 @@ public class Home extends javax.swing.JFrame {
 
             long invoiceID = genarateInvoiceID();
             String customerMobile = jLabel26.getText();
-            String employeeEmail = jLabel2.getText();
+            double productsTotalPrice = Double.parseDouble(jTextField2.getText());
             String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             String paidAmount = jFormattedTextField4.getText();
             String paymentMethodID = paymentMethodsMap.get(String.valueOf(jComboBox2.getSelectedItem()));
             String discount = String.valueOf(jFormattedTextField3.getText());
 
+            
+            double customerBillpriceToPay = productsTotalPrice - Double.parseDouble(discount);
+            
+            
             //insert to invoice
             MySQL.execute("INSERT INTO `invoice` VALUES ('" + invoiceID + "', '" + customerMobile + "', '" + nic + "', "
-                    + "'" + paymentMethodID + "', '" + paidAmount + "', '" + dateTime + "', '" + discount + "')");
+                    + "'" + paymentMethodID + "', '" + customerBillpriceToPay + "', '" + dateTime + "', '" + discount + "')");
             //insert to invoice
 
             for (InvoiceItens invoiceItem : invoiceItemsMap.values()) {
@@ -1160,7 +1165,7 @@ public class Home extends javax.swing.JFrame {
 
             }
 
-            Double points = Double.parseDouble(jTextField2.getText()) / 100;
+            Double points = customerBillpriceToPay / 100;
 
             // Withdrow points
             if (withdrawPoints) {
@@ -1180,7 +1185,7 @@ public class Home extends javax.swing.JFrame {
             params.put("billNo", String.valueOf(invoiceID) );
             params.put("dateTime", dateTime);
             params.put("custonerNo", customerMobile);
-            params.put("GrandTotal", jTextField2.getText());
+            params.put("GrandTotal", String.valueOf(customerBillpriceToPay));
             params.put("cash", paidAmount);
             params.put("paymentMethod", String.valueOf(jComboBox1.getSelectedItem()));
             params.put("balance", jTextField3.getText());

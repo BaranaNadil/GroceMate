@@ -266,3 +266,77 @@ Sep 20, 2024 1:19:32 AM gui.AdminChoose jButton1ActionPerformed
 INFO: User :Barana Nadil select to go to Admin Pannel .
 Sep 20, 2024 1:19:36 AM gui.AdminChoose jButton2ActionPerformed
 INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 2:05:29 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 2:05:45 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 2:07:00 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 2:12:22 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 2:15:10 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 2:15:15 PM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 20, 2024 2:39:40 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :jLabel2 select to go to Cashier End.
+Sep 20, 2024 2:39:49 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 2:43:07 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 2:43:14 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 2:43:27 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 2:45:01 PM gui.Home jButton7ActionPerformed
+INFO: CHECKOUT DONE !, invoice ID : 1726823701789
+Sep 20, 2024 4:15:34 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 4:17:30 PM gui.SignInDialog signIn
+WARNING: User Enterd Invalid email or password.
+Sep 20, 2024 4:17:35 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 4:17:39 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 4:17:48 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 4:24:53 PM gui.Home jButton7ActionPerformed
+INFO: CHECKOUT DONE !, invoice ID : 1726829693018
+Sep 20, 2024 5:15:04 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 5:15:07 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 5:15:13 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 5:16:35 PM gui.Home jButton7ActionPerformed
+INFO: CHECKOUT DONE !, invoice ID : 1726832795621
+Sep 20, 2024 5:19:28 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 5:19:30 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 5:19:35 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 5:20:37 PM gui.Home jButton7ActionPerformed
+INFO: CHECKOUT DONE !, invoice ID : 1726833037702
+Sep 20, 2024 5:22:54 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 5:22:57 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 5:23:03 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 5:24:29 PM gui.Home jButton7ActionPerformed
+INFO: CHECKOUT DONE !, invoice ID : 1726833269038
+Sep 20, 2024 10:54:37 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 10:54:42 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.
+Sep 20, 2024 10:54:47 PM gui.CustomerManegement jTable1KeyReleased
+INFO: Registerd Customer SELECTED. customer_name : Ravindu Rukshan
+Sep 20, 2024 10:56:22 PM gui.Home jButton7ActionPerformed
+INFO: CHECKOUT DONE !, invoice ID : 1726853182525
+Sep 20, 2024 10:57:23 PM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 20, 2024 11:02:39 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 20, 2024 11:02:42 PM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Admin Pannel .

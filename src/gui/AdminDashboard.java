@@ -48,8 +48,20 @@ public class AdminDashboard extends javax.swing.JFrame {
         loadTotaltoPushaceSuppliers();
 
         loadTotalDifferencetoPay();
-        
+
         loadStockValue();
+
+        loadTotalIncomeValue();
+
+        loadCustomers();
+        
+        
+        loadSuppliers();
+        
+        loadPurchaseInvoice();
+        
+        loadSellingInvoiceCount();
+        
 
         // Set the tab height and width to 0 (or minimal size) to effectively hide them
         jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
@@ -64,8 +76,106 @@ public class AdminDashboard extends javax.swing.JFrame {
             }
         });
     }
+    
+    
+    
+    
+    
+    ///Load All Seiings Invoices count
+    private void loadSellingInvoiceCount() {
+        try {
+            ResultSet result = MySQL.execute("SELECT COUNT(`id`) FROM `invoice`");
 
-    ///load value of stock
+            if (result.next()) {
+
+                jLabel53.setText(result.getString(1));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    ///Load All Seiings Invoices count
+    
+    
+    
+    
+    
+    ///Load All Purchase Invoices count
+     private void loadPurchaseInvoice() {
+        try {
+            ResultSet result = MySQL.execute("SELECT COUNT(`id`) FROM `grn`");
+
+            if (result.next()) {
+
+                jLabel50.setText(result.getString(1));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    ///Load All Purchase Invoices
+    
+    
+    
+
+    ///Load Suppliers count to box
+    private void loadSuppliers() {
+        try {
+            ResultSet result = MySQL.execute("SELECT COUNT(`mobile`) FROM `supplier`");
+
+            if (result.next()) {
+
+                jLabel47.setText(result.getString(1));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    ///Load Suppliers to box
+
+    ///Load Total customers to box
+    private void loadCustomers() {
+        try {
+            ResultSet result = MySQL.execute("SELECT COUNT(`mobile`) FROM `customes`");
+
+            if (result.next()) {
+
+                jLabel44.setText(result.getString(1));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    ///Load Total customers to box
+
+    ///Load total Income >Therd Box<
+    private void loadTotalIncomeValue() {
+//        double total = 0;
+        try {
+
+            ResultSet result = MySQL.execute("SELECT SUM(payed_ammount) FROM `invoice`");
+
+            if (result.next()) {
+                jLabel38.setText("Rs. " + result.getString(1));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+//        jLabel38.setText("Rs. " + total);
+    }
+    ///Load total Income >Therd Box<
+
+    ///load value of stock  >second Box<
     private void loadStockValue() {
         double stockValue = 0.0;
         try {
@@ -75,7 +185,7 @@ public class AdminDashboard extends javax.swing.JFrame {
             while (result.next()) {
                 double qty = Double.parseDouble(result.getString("quantity"));
                 double price = Double.parseDouble(result.getString("price"));
-                
+
                 stockValue += price * qty;
             }
 
@@ -84,13 +194,13 @@ public class AdminDashboard extends javax.swing.JFrame {
         }
 
         jLabel35.setText("Rs. " + stockValue);
-        
+
     }
 
     double totalValueOfProducts = 0.0;
     double totalPaidPrice = 0.0;
 
-    ////load to pachase to supliers
+    ////load to pachase to supliers >4th  box<
     private void loadTotaltoPushaceSuppliers() {
 
         try {
@@ -108,7 +218,7 @@ public class AdminDashboard extends javax.swing.JFrame {
 
     }
 
-    /// load how much to play to suppliers
+    /// load how much to play to suppliers >first box<
     private void loadTotalDifferencetoPay() {
 
         try {
@@ -127,7 +237,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel34.setText("Rs. " + String.valueOf(totalValueOfProducts - totalPaidPrice));
     }
 
-    ////Load Chart to a pannel
+    ////Load Chart to a pannel 
     private void addChartToPanel() {
         // Create dataset
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -1697,7 +1807,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel60MouseExited
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-      adminchoose(SignInDialog.userType);
+        adminchoose(SignInDialog.userType);
     }//GEN-LAST:event_jLabel1MouseClicked
 
     /**
@@ -1890,17 +2000,14 @@ public class AdminDashboard extends javax.swing.JFrame {
                 break;
         }
     }
-    
-    
+
     /////open admin choose window
-     public void adminchoose(int userType) {
+    public void adminchoose(int userType) {
 
         AdminChoose choose = new AdminChoose(this, true, userType);
         choose.setVisible(true);
 
     }
     /////open admin choose window
-    
-    
 
 }
