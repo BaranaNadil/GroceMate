@@ -54,14 +54,12 @@ public class AdminDashboard extends javax.swing.JFrame {
         loadTotalIncomeValue();
 
         loadCustomers();
-        
-        
+
         loadSuppliers();
-        
+
         loadPurchaseInvoice();
-        
+
         loadSellingInvoiceCount();
-        
 
         // Set the tab height and width to 0 (or minimal size) to effectively hide them
         jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
@@ -76,11 +74,7 @@ public class AdminDashboard extends javax.swing.JFrame {
             }
         });
     }
-    
-    
-    
-    
-    
+
     ///Load All Seiings Invoices count
     private void loadSellingInvoiceCount() {
         try {
@@ -97,13 +91,9 @@ public class AdminDashboard extends javax.swing.JFrame {
         }
     }
     ///Load All Seiings Invoices count
-    
-    
-    
-    
-    
+
     ///Load All Purchase Invoices count
-     private void loadPurchaseInvoice() {
+    private void loadPurchaseInvoice() {
         try {
             ResultSet result = MySQL.execute("SELECT COUNT(`id`) FROM `grn`");
 
@@ -118,9 +108,6 @@ public class AdminDashboard extends javax.swing.JFrame {
         }
     }
     ///Load All Purchase Invoices
-    
-    
-    
 
     ///Load Suppliers count to box
     private void loadSuppliers() {
@@ -241,37 +228,69 @@ public class AdminDashboard extends javax.swing.JFrame {
     private void addChartToPanel() {
         // Create dataset
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(100, "Sales", "Jan");
-        dataset.addValue(200, "Sales", "Feb");
-        dataset.addValue(300, "Sales", "Mar");
-        dataset.addValue(150, "Sales", "Apr");
-        dataset.addValue(180, "Sales", "May");
-        dataset.addValue(230, "Sales", "Jun");
-        dataset.addValue(280, "Sales", "Jul");
-        dataset.addValue(310, "Sales", "Aug");
-        dataset.addValue(120, "Sales", "Sep");
 
-        dataset.addValue(-100, "Purchase", "Jan");
-        dataset.addValue(-150, "Purchase", "Feb");
-        dataset.addValue(-200, "Purchase", "Mar");
-        dataset.addValue(-50, "Purchase", "Apr");
-        dataset.addValue(-100, "Purchase", "May");
-        dataset.addValue(-50, "Purchase", "Jun");
-        dataset.addValue(-150, "Purchase", "Jul");
-        dataset.addValue(-200, "Purchase", "Aug");
-        dataset.addValue(-90, "Purchase", "Sep");
+        double sales = 0;
+        try {
+            String query = "SELECT  DATE_FORMAT(`date_time`, '%Y-%b')AS MONTH, `payed_ammount` FROM `invoice`";
+            ResultSet result = MySQL.execute(query);
 
-        // Create the bar chart
-        JFreeChart chart = ChartFactory.createBarChart(
-                "", // Chart title
-                "", // Category axis label
-                "", // Value axis label
-                dataset,
-                PlotOrientation.VERTICAL,
-                false, // Include legend
-                false,
-                false
-        );
+            while (result.next()) {
+                String month = result.getString("month");
+                sales += result.getDouble("payed_ammount");
+
+                // Add data to dataset
+                dataset.addValue(sales, "Sales", month);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+double purchase = 0;
+        try {
+            String query = "SELECT  DATE_FORMAT(`date`, '%Y-%b')AS MONTH, `paid_ammount` FROM `grn`";
+            ResultSet result = MySQL.execute(query);
+
+            while (result.next()) {
+                String month = result.getString("month");
+                purchase += result.getDouble("paid_ammount");
+
+                // Add data to dataset
+                dataset.addValue(-purchase, "Purchase", month);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+       //        dataset.addValue(100, "Sales", "Jan");
+                //        dataset.addValue(200, "Sales", "Feb");
+                //        dataset.addValue(300, "Sales", "Mar");
+                //        dataset.addValue(150, "Sales", "Apr");
+                //        dataset.addValue(180, "Sales", "May");
+                //        dataset.addValue(230, "Sales", "Jun");
+                //        dataset.addValue(280, "Sales", "Jul");
+                //        dataset.addValue(310, "Sales", "Aug");
+                //        dataset.addValue(120, "Sales", "Sep");
+                //
+                //        dataset.addValue(-100, "Purchase", "Jan");
+                //        dataset.addValue(-150, "Purchase", "Feb");
+                //        dataset.addValue(-200, "Purchase", "Mar");
+                //        dataset.addValue(-50, "Purchase", "Apr");
+                //        dataset.addValue(-100, "Purchase", "May");
+                //        dataset.addValue(-50, "Purchase", "Jun");
+                //        dataset.addValue(-150, "Purchase", "Jul");
+                //        dataset.addValue(-200, "Purchase", "Aug");
+                //        dataset.addValue(-90, "Purchase", "Sep");
+                // Create the bar chart
+                JFreeChart chart = ChartFactory.createBarChart(
+                        "", // Chart title
+                        "", // Category axis label
+                        "", // Value axis label
+                        dataset,
+                        PlotOrientation.VERTICAL,
+                        false, // Include legend
+                        false,
+                        false
+                );
 
         // Customize the bar colors
         CategoryPlot plot = chart.getCategoryPlot();
