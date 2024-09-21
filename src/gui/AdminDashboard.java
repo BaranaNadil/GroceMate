@@ -21,6 +21,9 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.UIManager;
 import org.jfree.ui.RectangleInsets;
@@ -28,6 +31,14 @@ import org.jfree.ui.RectangleInsets;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import model.MySQL;
 
 public class AdminDashboard extends javax.swing.JFrame {
@@ -60,6 +71,11 @@ public class AdminDashboard extends javax.swing.JFrame {
         loadPurchaseInvoice();
 
         loadSellingInvoiceCount();
+        
+        loadResentlyAddedProducts();
+        
+        loadExpierSoonProducts();
+        addButtonToTable();
 
         // Set the tab height and width to 0 (or minimal size) to effectively hide them
         jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
@@ -74,6 +90,180 @@ public class AdminDashboard extends javax.swing.JFrame {
             }
         });
     }
+    
+    
+    
+    
+    
+    ///Load Expier Soon Products
+    private void loadExpierSoonProducts(){
+        try {
+            ResultSet result = MySQL.execute("SELECT * FROM `stock` "
+                + "INNER JOIN `prodect` ON `stock`.`prodect_id` = `prodect`.`id` "
+                + "WHERE exp BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY) ORDER BY `exp` ASC");
+
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);  // Clear previous data
+            int index = 0;
+
+            while (result.next()) {
+                index++;
+                Vector<Object> vector = new Vector<>();
+                vector.add(index);
+                vector.add(result.getString("prodect.name")); // Product Name
+                vector.add(result.getInt("stock.id"));        // Stock ID
+                vector.add(result.getDate("stock.mfd"));      // Manufacture Date
+                vector.add(result.getDate("stock.exp"));      // Expiry Date
+
+                // Add placeholder for JButton
+                vector.add("Return");  // We'll replace this with a JButton in the JTable
+
+                model.addRow(vector);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+    }
+
+   
+    // Renderer class to display JButton in the table
+class ButtonRenderer extends JButton implements TableCellRenderer {
+    public ButtonRenderer() {
+        setOpaque(true);
+    }
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+        setText((value == null) ? "Return" : value.toString());
+        return this;
+    }
+}
+
+// Editor class to handle button clicks
+class ButtonEditor extends DefaultCellEditor {
+    protected JButton button;
+    private String label;
+    private boolean clicked;
+    private int stockId; // To store the stock ID for this row
+
+    public ButtonEditor(JCheckBox checkBox) {
+        super(checkBox);
+        button = new JButton();
+        button.setOpaque(true);
+
+        // Add button click listener
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fireEditingStopped();
+            }
+        });
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        label = (value == null) ? "Return" : value.toString();
+        button.setText(label);
+        clicked = true;
+
+        // Get the stock ID from the table for the selected row
+        stockId = (int) table.getValueAt(row, 2); // Assuming stock ID is in column 2
+        return button;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        if (clicked) {
+            // Action when button is clicked
+            System.out.println("Returning stock with ID: " + stockId);
+
+            // Add the selected stock to return table
+            addToReturnTable(stockId);
+        }
+        clicked = false;
+        return label;
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+        clicked = false;
+        return super.stopCellEditing();
+    }
+
+    @Override
+    protected void fireEditingStopped() {
+        super.fireEditingStopped();
+    }
+}
+
+public void addButtonToTable() {
+    // Add the button to the "Return" column (assumed to be column 5)
+    TableColumn returnColumn = jTable1.getColumnModel().getColumn(5); // 5th column for buttons
+    returnColumn.setCellRenderer(new ButtonRenderer());
+    returnColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
+
+    // Optionally set the preferred width
+    jTable1.getColumnModel().getColumn(5).setPreferredWidth(100);
+}
+
+public void addToReturnTable(int stockId) {
+    // Implement logic to add stock to the return table based on stockId
+    System.out.println("Stock with ID " + stockId + " added to return table.");
+
+    // Example: Execute an insert query or update your return table
+//    MySQL.execute("INSERT INTO return_table (stock_id) VALUES (" + stockId + ")");
+}
+
+
+    
+    
+    ///Load Expier Soon Products
+    
+    
+  
+
+  
+    
+    
+    
+    
+    
+    //Load Resently Added Products Table
+    private void loadResentlyAddedProducts(){
+        try{
+        ResultSet result = MySQL.execute("SELECT * FROM `prodect` "
+                + "INNER JOIN `stock` ON `prodect`.`id` = `stock`.`prodect_id` "
+                + "INNER JOIN `grn_item` ON `stock`.`id` = `grn_item`.`stock_id` "
+                + "INNER JOIN `grn` ON `grn_item`.`grn_id` = `grn`.`id` "
+                + "ORDER BY `grn`.`date` DESC LIMIT 20");
+        
+        int index = 0;
+            DefaultTableModel model = (DefaultTableModel)jTable3.getModel();
+            model.setRowCount(0);
+        while(result.next()){
+            index ++;
+            
+            Vector<String> vector = new Vector();
+            vector.add(String.valueOf(index));
+            vector.add(result.getString("prodect.name"));
+            vector.add(result.getString("grn_item.qrt"));
+            
+            model.addRow(vector);
+            
+            
+        }
+        
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+    //Load Resently Added Products Table
+    
+    
+    
+    
 
     ///Load All Seiings Invoices count
     private void loadSellingInvoiceCount() {
@@ -280,6 +470,7 @@ double purchase = 0;
                 //        dataset.addValue(-150, "Purchase", "Jul");
                 //        dataset.addValue(-200, "Purchase", "Aug");
                 //        dataset.addValue(-90, "Purchase", "Sep");
+                
                 // Create the bar chart
                 JFreeChart chart = ChartFactory.createBarChart(
                         "", // Chart title
@@ -484,6 +675,11 @@ double purchase = 0;
         jPanel36 = new javax.swing.JPanel();
         jLabel58 = new javax.swing.JLabel();
         jPanel39 = new javax.swing.JPanel();
+        jLabel61 = new javax.swing.JLabel();
+        jLabel62 = new javax.swing.JLabel();
+        jLabel63 = new javax.swing.JLabel();
+        jLabel64 = new javax.swing.JLabel();
+        jLabel65 = new javax.swing.JLabel();
         jPanel37 = new javax.swing.JPanel();
         jLabel57 = new javax.swing.JLabel();
         jLabel56 = new javax.swing.JLabel();
@@ -1354,6 +1550,26 @@ double purchase = 0;
 
         jPanel36.add(jPanel39, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 510, 200));
 
+        jLabel61.setBackground(new java.awt.Color(255, 0, 0));
+        jLabel61.setOpaque(true);
+        jPanel36.add(jLabel61, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 20, 10, 10));
+
+        jLabel62.setBackground(new java.awt.Color(51, 255, 0));
+        jLabel62.setOpaque(true);
+        jPanel36.add(jLabel62, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 20, 10, 10));
+
+        jLabel63.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel63.setText("Purchase");
+        jPanel36.add(jLabel63, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 20, -1, 10));
+
+        jLabel64.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel64.setText("Sales");
+        jPanel36.add(jLabel64, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, -1, 10));
+
+        jLabel65.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel65.setText("M o n t h s");
+        jPanel36.add(jLabel65, new org.netbeans.lib.awtextra.AbsoluteConstraints(56, 270, 500, -1));
+
         jPanel37.setBackground(new java.awt.Color(255, 255, 255));
         jPanel37.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 102)));
         jPanel37.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1385,11 +1601,11 @@ double purchase = 0;
                 {null, null, null}
             },
             new String [] {
-                "No", "Product", "Price"
+                "No", "Product", "Quantity"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1403,7 +1619,7 @@ double purchase = 0;
             jTable3.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        jPanel37.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 540, 420));
+        jPanel37.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 540, 210));
 
         jPanel38.setBackground(new java.awt.Color(255, 255, 255));
         jPanel38.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 102)));
@@ -1427,7 +1643,7 @@ double purchase = 0;
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1524,7 +1740,7 @@ double purchase = 0;
                 .addGap(30, 30, 30)
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel37, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel36, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
+                    .addComponent(jPanel36, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(30, 30, 30)
                 .addComponent(jPanel38, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
@@ -1903,6 +2119,11 @@ double purchase = 0;
     private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel60;
+    private javax.swing.JLabel jLabel61;
+    private javax.swing.JLabel jLabel62;
+    private javax.swing.JLabel jLabel63;
+    private javax.swing.JLabel jLabel64;
+    private javax.swing.JLabel jLabel65;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
