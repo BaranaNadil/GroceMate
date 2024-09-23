@@ -5,6 +5,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import javax.swing.JFrame;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.event.KeyEvent;
@@ -41,6 +42,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -85,8 +87,6 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         loadExpierSoonProducts();
 
-        loadLineChart();
-
         // Set the tab height and width to 0 (or minimal size) to effectively hide them
         jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
             @Override
@@ -101,73 +101,6 @@ public class AdminDashboard extends javax.swing.JFrame {
         });
     }
 
-    //// Load Selling Chart
-    ////Load Line Chart to a panel 
-    private void addLineChartToPanel() {
-        // Create dataset
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-        double sales = 0;
-        try {
-            String query = "SELECT  `date_time`, `payed_ammount` FROM `invoice` ORDER BY `date_time` ASC";
-            ResultSet result = MySQL.execute(query);
-
-            while (result.next()) {
-                String month = result.getString("date_time");
-                sales = result.getDouble("payed_ammount");
-
-                // Add data to dataset
-                dataset.addValue(sales, "Sales", month);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        // Create the line chart
-        JFreeChart lineChart = ChartFactory.createLineChart(
-                "Sales Over Time", // Chart title
-                "Month", // X-axis label
-                "Sales Amount", // Y-axis label
-                dataset, // Dataset
-                PlotOrientation.VERTICAL,
-                false, // Include legend
-                false,
-                false
-        );
-
-        // Customize the plot
-        CategoryPlot plot = lineChart.getCategoryPlot();
-        plot.setBackgroundPaint(UIManager.getColor("Panel.background"));
-        plot.setRangeGridlinePaint(UIManager.getColor("Component.borderColor"));
-        plot.setDomainGridlinePaint(UIManager.getColor("Component.borderColor"));
-
-        lineChart.getTitle().setFont(UIManager.getFont("Label.font"));
-        plot.getDomainAxis().setLabelFont(UIManager.getFont("Label.font"));
-        plot.getRangeAxis().setLabelFont(UIManager.getFont("Label.font"));
-
-        plot.setOutlinePaint(UIManager.getColor("Component.borderColor"));
-        plot.setInsets(new RectangleInsets(10, 10, 10, 10));
-
-        // Create ChartPanel to display the chart
-        ChartPanel chartPanel = new ChartPanel(lineChart);
-        chartPanel.setBorder(BorderFactory.createLineBorder(UIManager.getColor("Component.borderColor")));
-        chartPanel.setPreferredSize(new java.awt.Dimension(400, 300));  // Adjust size as needed
-
-        // Add the chart panel to jPanel39
-        jPanel40.setLayout(new java.awt.BorderLayout());  // Use BorderLayout for dynamic resizing
-        jPanel40.add(chartPanel, java.awt.BorderLayout.CENTER);
-
-        jPanel40.validate();  // Revalidate the panel to update the UI
-    }
-////Load Line Chart to a panel
-
-// Load the line chart
-    private void loadLineChart() {
-        addLineChartToPanel();
-    }
-
-    //// Load Selling Chart
     ///Load Expier Soon Products
     private void loadExpierSoonProducts() {
         try {
@@ -781,23 +714,28 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel60 = new javax.swing.JLabel();
         jLabel30 = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel41 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
         jPanel16 = new javax.swing.JPanel();
-        jLabel66 = new javax.swing.JLabel();
-        jPanel40 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        jScrollPane6 = new javax.swing.JScrollPane();
         jPanel17 = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
         jPanel18 = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
         jPanel19 = new javax.swing.JPanel();
+        jScrollPane9 = new javax.swing.JScrollPane();
         jPanel20 = new javax.swing.JPanel();
+        jScrollPane10 = new javax.swing.JScrollPane();
         jPanel21 = new javax.swing.JPanel();
-        jPanel22 = new javax.swing.JPanel();
+        jScrollPane11 = new javax.swing.JScrollPane();
         jPanel23 = new javax.swing.JPanel();
+        jScrollPane12 = new javax.swing.JScrollPane();
+        jPanel22 = new javax.swing.JPanel();
+        jScrollPane13 = new javax.swing.JScrollPane();
         jPanel24 = new javax.swing.JPanel();
+        jScrollPane14 = new javax.swing.JScrollPane();
         jPanel25 = new javax.swing.JPanel();
-        jPanel26 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -1287,7 +1225,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel27.setBackground(new java.awt.Color(102, 102, 102));
@@ -1845,217 +1783,133 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("tab13", jScrollPane3);
 
-        jPanel16.setBackground(new java.awt.Color(255, 255, 204));
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        jLabel66.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        jLabel66.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel66.setText("Sales");
+        jPanel41.setLayout(new java.awt.BorderLayout());
+        jScrollPane1.setViewportView(jPanel41);
 
-        javax.swing.GroupLayout jPanel40Layout = new javax.swing.GroupLayout(jPanel40);
-        jPanel40.setLayout(jPanel40Layout);
-        jPanel40Layout.setHorizontalGroup(
-            jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel40Layout.setVerticalGroup(
-            jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 468, Short.MAX_VALUE)
-        );
-
-        jButton1.setText("Get Sellings by Date Time (chart)");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Get Sellings by Date (chart)");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("Get Sellings by Month (chart)");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton4.setText("Get Sellings by Year (chart)");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
+        jTabbedPane1.addTab("tab12", jScrollPane1);
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
         jPanel16Layout.setHorizontalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel40, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel16Layout.createSequentialGroup()
-                .addGap(89, 89, 89)
-                .addComponent(jLabel66, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(130, 130, 130)
-                .addComponent(jButton1)
-                .addGap(42, 42, 42)
-                .addComponent(jButton2)
-                .addGap(38, 38, 38)
-                .addComponent(jButton3)
-                .addGap(45, 45, 45)
-                .addComponent(jButton4)
-                .addContainerGap(84, Short.MAX_VALUE))
+            .addGap(0, 1212, Short.MAX_VALUE)
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel16Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel66, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel40, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(333, Short.MAX_VALUE))
+            .addGap(0, 776, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab2", jPanel16);
+        jScrollPane2.setViewportView(jPanel16);
 
-        jPanel17.setBackground(new java.awt.Color(204, 255, 255));
+        jTabbedPane1.addTab("tab3", jScrollPane2);
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
         jPanel17Layout.setHorizontalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
+            .addGap(0, 1212, Short.MAX_VALUE)
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
+            .addGap(0, 776, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab3", jPanel17);
+        jScrollPane6.setViewportView(jPanel17);
+
+        jTabbedPane1.addTab("tab4", jScrollPane6);
 
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
         jPanel18Layout.setHorizontalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
+            .addGap(0, 1212, Short.MAX_VALUE)
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
+            .addGap(0, 776, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab4", jPanel18);
+        jScrollPane7.setViewportView(jPanel18);
+
+        jTabbedPane1.addTab("tab5", jScrollPane7);
 
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
         jPanel19Layout.setHorizontalGroup(
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
+            .addGap(0, 1212, Short.MAX_VALUE)
         );
         jPanel19Layout.setVerticalGroup(
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
+            .addGap(0, 776, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab5", jPanel19);
+        jScrollPane8.setViewportView(jPanel19);
+
+        jTabbedPane1.addTab("tab6", jScrollPane8);
 
         javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
         jPanel20.setLayout(jPanel20Layout);
         jPanel20Layout.setHorizontalGroup(
             jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
+            .addGap(0, 1212, Short.MAX_VALUE)
         );
         jPanel20Layout.setVerticalGroup(
             jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
+            .addGap(0, 776, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab6", jPanel20);
+        jScrollPane9.setViewportView(jPanel20);
 
-        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
-        jPanel21.setLayout(jPanel21Layout);
-        jPanel21Layout.setHorizontalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
-        );
-        jPanel21Layout.setVerticalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
-        );
+        jTabbedPane1.addTab("tab7", jScrollPane9);
 
-        jTabbedPane1.addTab("tab7", jPanel21);
+        jPanel21.setLayout(new java.awt.BorderLayout());
+        jScrollPane10.setViewportView(jPanel21);
 
-        javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
-        jPanel22.setLayout(jPanel22Layout);
-        jPanel22Layout.setHorizontalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
-        );
-        jPanel22Layout.setVerticalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("tab8", jPanel22);
+        jTabbedPane1.addTab("tab8", jScrollPane10);
 
         javax.swing.GroupLayout jPanel23Layout = new javax.swing.GroupLayout(jPanel23);
         jPanel23.setLayout(jPanel23Layout);
         jPanel23Layout.setHorizontalGroup(
             jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
+            .addGap(0, 1212, Short.MAX_VALUE)
         );
         jPanel23Layout.setVerticalGroup(
             jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
+            .addGap(0, 776, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab9", jPanel23);
+        jScrollPane11.setViewportView(jPanel23);
 
-        javax.swing.GroupLayout jPanel24Layout = new javax.swing.GroupLayout(jPanel24);
-        jPanel24.setLayout(jPanel24Layout);
-        jPanel24Layout.setHorizontalGroup(
-            jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
-        );
-        jPanel24Layout.setVerticalGroup(
-            jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
-        );
+        jTabbedPane1.addTab("tab9", jScrollPane11);
 
-        jTabbedPane1.addTab("tab10", jPanel24);
-
-        javax.swing.GroupLayout jPanel25Layout = new javax.swing.GroupLayout(jPanel25);
-        jPanel25.setLayout(jPanel25Layout);
-        jPanel25Layout.setHorizontalGroup(
-            jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
+        jPanel22.setLayout(jPanel22Layout);
+        jPanel22Layout.setHorizontalGroup(
+            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1212, Short.MAX_VALUE)
         );
-        jPanel25Layout.setVerticalGroup(
-            jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
+        jPanel22Layout.setVerticalGroup(
+            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 776, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab11", jPanel25);
+        jScrollPane12.setViewportView(jPanel22);
 
-        javax.swing.GroupLayout jPanel26Layout = new javax.swing.GroupLayout(jPanel26);
-        jPanel26.setLayout(jPanel26Layout);
-        jPanel26Layout.setHorizontalGroup(
-            jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
-        );
-        jPanel26Layout.setVerticalGroup(
-            jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
-        );
+        jTabbedPane1.addTab("tab10", jScrollPane12);
 
-        jTabbedPane1.addTab("tab12", jPanel26);
+        jPanel24.setLayout(new java.awt.BorderLayout());
+        jScrollPane13.setViewportView(jPanel24);
+
+        jTabbedPane1.addTab("tab11", jScrollPane13);
+
+        jPanel25.setLayout(new java.awt.BorderLayout());
+        jScrollPane14.setViewportView(jPanel25);
+
+        jTabbedPane1.addTab("tab12", jScrollPane14);
 
         jPanel27.add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
@@ -2185,149 +2039,25 @@ public class AdminDashboard extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jTabbedPane1KeyReleased
 
-    private void jLabel57MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel57MouseEntered
-
-    }//GEN-LAST:event_jLabel57MouseEntered
-
-    private void jLabel57MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel57MouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel57MouseExited
-
-    private void jLabel60MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel60MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel60MouseEntered
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        adminchoose(SignInDialog.userType);
+    }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jLabel60MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel60MouseExited
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel60MouseExited
 
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        adminchoose(SignInDialog.userType);
-    }//GEN-LAST:event_jLabel1MouseClicked
+    private void jLabel60MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel60MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel60MouseEntered
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jLabel57MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel57MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel57MouseExited
 
-        HashMap<String, Object> params = new HashMap<>();
+    private void jLabel57MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel57MouseEntered
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        String date = sdf.format(new Date());
-
-        params.put("date", date);
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            java.sql.Connection connection = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "barananadil");
-
-            InputStream path = this.getClass().getResourceAsStream("/reports/testChart.jasper");
-
-            JasperPrint report = JasperFillManager.fillReport(path, params, connection);
-
-            JasperViewer.viewReport(report, false);
-            connection.close();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JRException e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
-        HashMap<String, Object> params = new HashMap<>();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        String date = sdf.format(new Date());
-
-        params.put("date", date);
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            java.sql.Connection connection = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "barananadil");
-
-            InputStream path = this.getClass().getResourceAsStream("/reports/testChart(Date).jasper");
-
-            JasperPrint report = JasperFillManager.fillReport(path, params, connection);
-
-            JasperViewer.viewReport(report, false);
-            connection.close();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JRException e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-
-        HashMap<String, Object> params = new HashMap<>();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        String date = sdf.format(new Date());
-
-        params.put("date", date);
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            java.sql.Connection connection = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "barananadil");
-
-            InputStream path = this.getClass().getResourceAsStream("/reports/testChart(Month).jasper");
-
-            JasperPrint report = JasperFillManager.fillReport(path, params, connection);
-
-            JasperViewer.viewReport(report, false);
-            connection.close();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JRException e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-
-        HashMap<String, Object> params = new HashMap<>();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        String date = sdf.format(new Date());
-
-        params.put("date", date);
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            java.sql.Connection connection = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "barananadil");
-
-            InputStream path = this.getClass().getResourceAsStream("/reports/testChart(Year).jasper");
-
-            JasperPrint report = JasperFillManager.fillReport(path, params, connection);
-
-            JasperViewer.viewReport(report, false);
-            connection.close();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JRException e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_jLabel57MouseEntered
 
     /**
      * @param args the command line arguments
@@ -2346,10 +2076,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -2412,7 +2138,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel63;
     private javax.swing.JLabel jLabel64;
     private javax.swing.JLabel jLabel65;
-    private javax.swing.JLabel jLabel66;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -2434,7 +2159,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel23;
     private javax.swing.JPanel jPanel24;
     private javax.swing.JPanel jPanel25;
-    private javax.swing.JPanel jPanel26;
     private javax.swing.JPanel jPanel27;
     private javax.swing.JPanel jPanel28;
     private javax.swing.JPanel jPanel29;
@@ -2450,15 +2174,26 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel38;
     private javax.swing.JPanel jPanel39;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel40;
+    private javax.swing.JPanel jPanel41;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane12;
+    private javax.swing.JScrollPane jScrollPane13;
+    private javax.swing.JScrollPane jScrollPane14;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable3;
@@ -2488,47 +2223,133 @@ public class AdminDashboard extends javax.swing.JFrame {
     private void updatePanelColors(int selectedIndex) {
         resetPanelColors();  // Reset all panel colors to the default
 
-        // Set the color of the currently selected panel
-        switch (selectedIndex) {
-            case 0:
-                jPanel3.setBackground(new Color(0, 153, 102));
-                break;
-            case 1:
-                jPanel4.setBackground(new Color(0, 153, 102));
-                break;
-            case 2:
-                jPanel5.setBackground(new Color(0, 153, 102));
-                break;
-            case 3:
-                jPanel6.setBackground(new Color(0, 153, 102));
-                break;
-            case 4:
-                jPanel7.setBackground(new Color(0, 153, 102));
-                break;
-            case 5:
-                jPanel8.setBackground(new Color(0, 153, 102));
-                break;
-            case 6:
-                jPanel9.setBackground(new Color(0, 153, 102));
-                break;
-            case 7:
-                jPanel10.setBackground(new Color(0, 153, 102));
-                break;
-            case 8:
-                jPanel11.setBackground(new Color(0, 153, 102));
-                break;
-            case 9:
-                jPanel12.setBackground(new Color(0, 153, 102));
-                break;
-            case 10:
-                jPanel13.setBackground(new Color(0, 153, 102));
-                break;
-            case 11:
-                jPanel14.setBackground(new Color(0, 153, 102));
-                break;
-            default:
-                break;
+        if (selectedIndex == 0) {
+            jPanel3.setBackground(new Color(0, 153, 102));
+        } else if (selectedIndex == 1) {
+
+            jPanel16.removeAll();
+            jPanel41.removeAll();
+            SelesPannel selesPannel = new SelesPannel();
+            jPanel41.add(selesPannel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel41);
+
+            jPanel4.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 2) {
+
+            jPanel41.removeAll();
+            jPanel16.removeAll();
+            jPanel17.removeAll();
+            ProductPannel productPannel = new ProductPannel();
+            jPanel16.add(productPannel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel16);
+
+            jPanel5.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 3) {
+
+            jPanel16.removeAll();
+            jPanel17.removeAll();
+            jPanel18.removeAll();
+            OrdersPannel ordersPannel = new OrdersPannel();
+            jPanel17.add(ordersPannel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel17);
+
+            jPanel6.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 4) {
+
+            jPanel17.removeAll();
+            jPanel18.removeAll();
+            jPanel19.removeAll();
+            CustomerPannel customerPannel = new CustomerPannel();
+            jPanel18.add(customerPannel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel18);
+
+            jPanel7.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 5) {
+
+            jPanel18.removeAll();
+            jPanel19.removeAll();
+            jPanel20.removeAll();
+            EmployeePannel employeePannel = new EmployeePannel();
+            jPanel19.add(employeePannel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel19);
+
+            jPanel8.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 6) {
+
+            jPanel19.removeAll();
+            jPanel20.removeAll();
+            jPanel21.removeAll();
+            PramotionPannel pramotionPannel = new PramotionPannel();
+            jPanel20.add(pramotionPannel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel20);
+
+            jPanel9.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 7) {
+
+            jPanel20.removeAll();
+            jPanel21.removeAll();
+            jPanel23.removeAll();
+            ReportsPannel reportsPannel = new ReportsPannel();
+            jPanel21.add(reportsPannel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel21);
+
+            jPanel10.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 8) {
+
+            jPanel21.removeAll();
+            jPanel23.removeAll();
+            jPanel22.removeAll();
+
+            PaymentsPannel paymentPannel = new PaymentsPannel();
+            jPanel23.add(paymentPannel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel23);
+
+            jPanel11.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 9) {
+
+            jPanel23.removeAll();
+            jPanel22.removeAll();
+            jPanel24.removeAll();
+
+            SettingsPanel settingsPanel = new SettingsPanel();
+            jPanel22.add(settingsPanel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel22);
+
+            jPanel12.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 10) {
+
+            jPanel22.removeAll();
+            jPanel24.removeAll();
+            jPanel25.removeAll();
+
+            NotificationPanel notificationPanel = new NotificationPanel();
+            jPanel24.add(notificationPanel, BorderLayout.NORTH);
+            SwingUtilities.updateComponentTreeUI(jPanel24);
+
+            jPanel13.setBackground(new Color(0, 153, 102));
+
+        } else if (selectedIndex == 11) {
+            
+            jPanel24.removeAll();
+            jPanel25.removeAll();
+            jPanel41.removeAll();
+            
+            SupportPanel supportPanel = new SupportPanel();
+            jPanel25.add(supportPanel, BorderLayout.NORTH);
+             SwingUtilities.updateComponentTreeUI(jPanel25);
+            jPanel14.setBackground(new Color(0, 153, 102));
         }
+
+        // Set the color of the currently selected panel
     }
 
     /////open admin choose window
