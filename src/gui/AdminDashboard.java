@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InputStream;
 import javax.swing.BorderFactory;
 import javax.swing.UIManager;
 import org.jfree.ui.RectangleInsets;
@@ -31,15 +32,23 @@ import org.jfree.ui.RectangleInsets;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import model.MySQL;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class AdminDashboard extends javax.swing.JFrame {
 
@@ -71,11 +80,12 @@ public class AdminDashboard extends javax.swing.JFrame {
         loadPurchaseInvoice();
 
         loadSellingInvoiceCount();
-        
+
         loadResentlyAddedProducts();
-        
+
         loadExpierSoonProducts();
-        addButtonToTable();
+
+        loadLineChart();
 
         // Set the tab height and width to 0 (or minimal size) to effectively hide them
         jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
@@ -90,17 +100,80 @@ public class AdminDashboard extends javax.swing.JFrame {
             }
         });
     }
-    
-    
-    
-    
-    
+
+    //// Load Selling Chart
+    ////Load Line Chart to a panel 
+    private void addLineChartToPanel() {
+        // Create dataset
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        double sales = 0;
+        try {
+            String query = "SELECT  `date_time`, `payed_ammount` FROM `invoice` ORDER BY `date_time` ASC";
+            ResultSet result = MySQL.execute(query);
+
+            while (result.next()) {
+                String month = result.getString("date_time");
+                sales = result.getDouble("payed_ammount");
+
+                // Add data to dataset
+                dataset.addValue(sales, "Sales", month);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Create the line chart
+        JFreeChart lineChart = ChartFactory.createLineChart(
+                "Sales Over Time", // Chart title
+                "Month", // X-axis label
+                "Sales Amount", // Y-axis label
+                dataset, // Dataset
+                PlotOrientation.VERTICAL,
+                false, // Include legend
+                false,
+                false
+        );
+
+        // Customize the plot
+        CategoryPlot plot = lineChart.getCategoryPlot();
+        plot.setBackgroundPaint(UIManager.getColor("Panel.background"));
+        plot.setRangeGridlinePaint(UIManager.getColor("Component.borderColor"));
+        plot.setDomainGridlinePaint(UIManager.getColor("Component.borderColor"));
+
+        lineChart.getTitle().setFont(UIManager.getFont("Label.font"));
+        plot.getDomainAxis().setLabelFont(UIManager.getFont("Label.font"));
+        plot.getRangeAxis().setLabelFont(UIManager.getFont("Label.font"));
+
+        plot.setOutlinePaint(UIManager.getColor("Component.borderColor"));
+        plot.setInsets(new RectangleInsets(10, 10, 10, 10));
+
+        // Create ChartPanel to display the chart
+        ChartPanel chartPanel = new ChartPanel(lineChart);
+        chartPanel.setBorder(BorderFactory.createLineBorder(UIManager.getColor("Component.borderColor")));
+        chartPanel.setPreferredSize(new java.awt.Dimension(400, 300));  // Adjust size as needed
+
+        // Add the chart panel to jPanel39
+        jPanel40.setLayout(new java.awt.BorderLayout());  // Use BorderLayout for dynamic resizing
+        jPanel40.add(chartPanel, java.awt.BorderLayout.CENTER);
+
+        jPanel40.validate();  // Revalidate the panel to update the UI
+    }
+////Load Line Chart to a panel
+
+// Load the line chart
+    private void loadLineChart() {
+        addLineChartToPanel();
+    }
+
+    //// Load Selling Chart
     ///Load Expier Soon Products
-    private void loadExpierSoonProducts(){
+    private void loadExpierSoonProducts() {
         try {
             ResultSet result = MySQL.execute("SELECT * FROM `stock` "
-                + "INNER JOIN `prodect` ON `stock`.`prodect_id` = `prodect`.`id` "
-                + "WHERE exp BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY) ORDER BY `exp` ASC");
+                    + "INNER JOIN `prodect` ON `stock`.`prodect_id` = `prodect`.`id` "
+                    + "WHERE `status` = '0' AND exp BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY) ORDER BY `exp` ASC");
 
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);  // Clear previous data
@@ -123,147 +196,163 @@ public class AdminDashboard extends javax.swing.JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+        addButtonToTable();
     }
 
-   
     // Renderer class to display JButton in the table
-class ButtonRenderer extends JButton implements TableCellRenderer {
-    public ButtonRenderer() {
-        setOpaque(true);
-    }
+    class ButtonRenderer extends JButton implements TableCellRenderer {
 
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int column) {
-        setText((value == null) ? "Return" : value.toString());
-        return this;
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            setText((value == null) ? "Return" : value.toString());
+            return this;
+        }
     }
-}
 
 // Editor class to handle button clicks
-class ButtonEditor extends DefaultCellEditor {
-    protected JButton button;
-    private String label;
-    private boolean clicked;
-    private int stockId; // To store the stock ID for this row
+    class ButtonEditor extends DefaultCellEditor {
 
-    public ButtonEditor(JCheckBox checkBox) {
-        super(checkBox);
-        button = new JButton();
-        button.setOpaque(true);
+        protected JButton button;
+        private String label;
+        private boolean clicked;
+        private int stockId; // To store the stock ID for this row
 
-        // Add button click listener
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fireEditingStopped();
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button = new JButton();
+            button.setOpaque(true);
+
+            // Add button click listener
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            label = (value == null) ? "Return" : value.toString();
+            button.setText(label);
+            clicked = true;
+
+            // Get the stock ID from the table for the selected row
+            stockId = (int) table.getValueAt(row, 2); // Assuming stock ID is in column 2
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            if (clicked) {
+                // Action when button is clicked
+                System.out.println("Returning stock with ID: " + stockId);
+
+                // Add the selected stock to return table
+                addToReturnTable(stockId);
             }
-        });
-    }
-
-    @Override
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        label = (value == null) ? "Return" : value.toString();
-        button.setText(label);
-        clicked = true;
-
-        // Get the stock ID from the table for the selected row
-        stockId = (int) table.getValueAt(row, 2); // Assuming stock ID is in column 2
-        return button;
-    }
-
-    @Override
-    public Object getCellEditorValue() {
-        if (clicked) {
-            // Action when button is clicked
-            System.out.println("Returning stock with ID: " + stockId);
-
-            // Add the selected stock to return table
-            addToReturnTable(stockId);
+            clicked = false;
+            return label;
         }
-        clicked = false;
-        return label;
+
+        @Override
+        public boolean stopCellEditing() {
+            clicked = false;
+            return super.stopCellEditing();
+        }
+
+        @Override
+        protected void fireEditingStopped() {
+            super.fireEditingStopped();
+        }
     }
 
-    @Override
-    public boolean stopCellEditing() {
-        clicked = false;
-        return super.stopCellEditing();
+    public void addButtonToTable() {
+        // Add the button to the "Return" column (assumed to be column 5)
+        TableColumn returnColumn = jTable1.getColumnModel().getColumn(5); // 5th column for buttons
+        returnColumn.setCellRenderer(new ButtonRenderer());
+        returnColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
+
+        // Optionally set the preferred width
+        jTable1.getColumnModel().getColumn(5).setPreferredWidth(100);
     }
 
-    @Override
-    protected void fireEditingStopped() {
-        super.fireEditingStopped();
+    public void addToReturnTable(int stockId) {
+        // Implement logic to add stock to the return table based on stockId
+        System.out.println("Stock with ID " + stockId + " added to return table.");
+
+        try {
+            ResultSet result = MySQL.execute("SELECT * FROM `stock` "
+                    + "INNER JOIN `grn_item` ON `stock`.`id` = `grn_item`.`stock_id` "
+                    + "INNER JOIN `grn` ON `grn_item`.`grn_id` = `grn`.`id` WHERE `stock`.`id` = '" + stockId + "' ");
+
+            if (result.next()) {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                long returnID = System.currentTimeMillis();
+
+                int condition = JOptionPane.showConfirmDialog(this, "Do you conform Return This Stock. StockID : " + stockId, "Confermation", JOptionPane.INFORMATION_MESSAGE);
+
+                if (condition == JOptionPane.OK_OPTION) {
+
+                    MySQL.execute("INSERT INTO `returns` (`id`,`date`, `supplier_mobile`, `employee_nic`)"
+                            + " VALUES ('" + returnID + "', '" + sdf.format(new Date()) + "', '" + result.getString("grn.supplier_mobile") + "', '" + result.getString("grn.employee_nic") + "') ");
+
+                    MySQL.execute("INSERT INTO `return_items` (`stock_id`, `quntity`, `returns_id`)"
+                            + " VALUES ('" + stockId + "', '" + result.getString("quantity") + "', '" + returnID + "')  ");
+
+                    MySQL.execute("UPDATE `stock` SET `status` = '1' WHERE `id` = '" + stockId + "'");
+
+                    SignInDialog.logger.info("Type :" + SignInDialog.userType + " User : " + SignInDialog.userName + " Return Stock : " + stockId + " To supplier.");
+                    JOptionPane.showMessageDialog(this, "Stock Returned.", "Information", JOptionPane.INFORMATION_MESSAGE);
+
+                    loadExpierSoonProducts();
+                }
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
-}
 
-public void addButtonToTable() {
-    // Add the button to the "Return" column (assumed to be column 5)
-    TableColumn returnColumn = jTable1.getColumnModel().getColumn(5); // 5th column for buttons
-    returnColumn.setCellRenderer(new ButtonRenderer());
-    returnColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
-
-    // Optionally set the preferred width
-    jTable1.getColumnModel().getColumn(5).setPreferredWidth(100);
-}
-
-public void addToReturnTable(int stockId) {
-    // Implement logic to add stock to the return table based on stockId
-    System.out.println("Stock with ID " + stockId + " added to return table.");
-
-    // Example: Execute an insert query or update your return table
-//    MySQL.execute("INSERT INTO return_table (stock_id) VALUES (" + stockId + ")");
-}
-
-
-    
-    
     ///Load Expier Soon Products
-    
-    
-  
-
-  
-    
-    
-    
-    
-    
     //Load Resently Added Products Table
-    private void loadResentlyAddedProducts(){
-        try{
-        ResultSet result = MySQL.execute("SELECT * FROM `prodect` "
-                + "INNER JOIN `stock` ON `prodect`.`id` = `stock`.`prodect_id` "
-                + "INNER JOIN `grn_item` ON `stock`.`id` = `grn_item`.`stock_id` "
-                + "INNER JOIN `grn` ON `grn_item`.`grn_id` = `grn`.`id` "
-                + "ORDER BY `grn`.`date` DESC LIMIT 20");
-        
-        int index = 0;
-            DefaultTableModel model = (DefaultTableModel)jTable3.getModel();
+    private void loadResentlyAddedProducts() {
+        try {
+            ResultSet result = MySQL.execute("SELECT * FROM `prodect` "
+                    + "INNER JOIN `stock` ON `prodect`.`id` = `stock`.`prodect_id` "
+                    + "INNER JOIN `grn_item` ON `stock`.`id` = `grn_item`.`stock_id` "
+                    + "INNER JOIN `grn` ON `grn_item`.`grn_id` = `grn`.`id` "
+                    + "WHERE `stock`.`status` = 0  ORDER BY `grn`.`date` DESC LIMIT 20");
+
+            int index = 0;
+            DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
             model.setRowCount(0);
-        while(result.next()){
-            index ++;
-            
-            Vector<String> vector = new Vector();
-            vector.add(String.valueOf(index));
-            vector.add(result.getString("prodect.name"));
-            vector.add(result.getString("grn_item.qrt"));
-            
-            model.addRow(vector);
-            
-            
-        }
-        
-        }catch(SQLException e){
+            while (result.next()) {
+                index++;
+
+                Vector<String> vector = new Vector();
+                vector.add(String.valueOf(index));
+                vector.add(result.getString("prodect.name"));
+                vector.add(result.getString("grn_item.qrt"));
+
+                model.addRow(vector);
+
+            }
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
     //Load Resently Added Products Table
-    
-    
-    
-    
 
     ///Load All Seiings Invoices count
     private void loadSellingInvoiceCount() {
@@ -357,7 +446,7 @@ public void addToReturnTable(int stockId) {
         double stockValue = 0.0;
         try {
 
-            ResultSet result = MySQL.execute("SELECT * FROM `stock`");
+            ResultSet result = MySQL.execute("SELECT * FROM `stock` WHERE `status` = '0'");
 
             while (result.next()) {
                 double qty = Double.parseDouble(result.getString("quantity"));
@@ -435,7 +524,7 @@ public void addToReturnTable(int stockId) {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-double purchase = 0;
+        double purchase = 0;
         try {
             String query = "SELECT  DATE_FORMAT(`date`, '%Y-%b')AS MONTH, `paid_ammount` FROM `grn`";
             ResultSet result = MySQL.execute(query);
@@ -451,37 +540,37 @@ double purchase = 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-       //        dataset.addValue(100, "Sales", "Jan");
-                //        dataset.addValue(200, "Sales", "Feb");
-                //        dataset.addValue(300, "Sales", "Mar");
-                //        dataset.addValue(150, "Sales", "Apr");
-                //        dataset.addValue(180, "Sales", "May");
-                //        dataset.addValue(230, "Sales", "Jun");
-                //        dataset.addValue(280, "Sales", "Jul");
-                //        dataset.addValue(310, "Sales", "Aug");
-                //        dataset.addValue(120, "Sales", "Sep");
-                //
-                //        dataset.addValue(-100, "Purchase", "Jan");
-                //        dataset.addValue(-150, "Purchase", "Feb");
-                //        dataset.addValue(-200, "Purchase", "Mar");
-                //        dataset.addValue(-50, "Purchase", "Apr");
-                //        dataset.addValue(-100, "Purchase", "May");
-                //        dataset.addValue(-50, "Purchase", "Jun");
-                //        dataset.addValue(-150, "Purchase", "Jul");
-                //        dataset.addValue(-200, "Purchase", "Aug");
-                //        dataset.addValue(-90, "Purchase", "Sep");
-                
-                // Create the bar chart
-                JFreeChart chart = ChartFactory.createBarChart(
-                        "", // Chart title
-                        "", // Category axis label
-                        "", // Value axis label
-                        dataset,
-                        PlotOrientation.VERTICAL,
-                        false, // Include legend
-                        false,
-                        false
-                );
+        //        dataset.addValue(100, "Sales", "Jan");
+        //        dataset.addValue(200, "Sales", "Feb");
+        //        dataset.addValue(300, "Sales", "Mar");
+        //        dataset.addValue(150, "Sales", "Apr");
+        //        dataset.addValue(180, "Sales", "May");
+        //        dataset.addValue(230, "Sales", "Jun");
+        //        dataset.addValue(280, "Sales", "Jul");
+        //        dataset.addValue(310, "Sales", "Aug");
+        //        dataset.addValue(120, "Sales", "Sep");
+        //
+        //        dataset.addValue(-100, "Purchase", "Jan");
+        //        dataset.addValue(-150, "Purchase", "Feb");
+        //        dataset.addValue(-200, "Purchase", "Mar");
+        //        dataset.addValue(-50, "Purchase", "Apr");
+        //        dataset.addValue(-100, "Purchase", "May");
+        //        dataset.addValue(-50, "Purchase", "Jun");
+        //        dataset.addValue(-150, "Purchase", "Jul");
+        //        dataset.addValue(-200, "Purchase", "Aug");
+        //        dataset.addValue(-90, "Purchase", "Sep");
+
+        // Create the bar chart
+        JFreeChart chart = ChartFactory.createBarChart(
+                "", // Chart title
+                "", // Category axis label
+                "", // Value axis label
+                dataset,
+                PlotOrientation.VERTICAL,
+                false, // Include legend
+                false,
+                false
+        );
 
         // Customize the bar colors
         CategoryPlot plot = chart.getCategoryPlot();
@@ -693,6 +782,12 @@ double purchase = 0;
         jLabel30 = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
         jPanel16 = new javax.swing.JPanel();
+        jLabel66 = new javax.swing.JLabel();
+        jPanel40 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         jPanel17 = new javax.swing.JPanel();
         jPanel18 = new javax.swing.JPanel();
         jPanel19 = new javax.swing.JPanel();
@@ -1270,7 +1365,7 @@ double purchase = 0;
 
         jLabel37.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel37.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel37.setText("Total Sales Due");
+        jLabel37.setText("Total Stock Value Due");
 
         javax.swing.GroupLayout jPanel29Layout = new javax.swing.GroupLayout(jPanel29);
         jPanel29.setLayout(jPanel29Layout);
@@ -1752,15 +1847,80 @@ double purchase = 0;
 
         jPanel16.setBackground(new java.awt.Color(255, 255, 204));
 
+        jLabel66.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        jLabel66.setForeground(new java.awt.Color(0, 102, 102));
+        jLabel66.setText("Sales");
+
+        javax.swing.GroupLayout jPanel40Layout = new javax.swing.GroupLayout(jPanel40);
+        jPanel40.setLayout(jPanel40Layout);
+        jPanel40Layout.setHorizontalGroup(
+            jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel40Layout.setVerticalGroup(
+            jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 468, Short.MAX_VALUE)
+        );
+
+        jButton1.setText("Get Sellings by Date Time (chart)");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Get Sellings by Date (chart)");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Get Sellings by Month (chart)");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Get Sellings by Year (chart)");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
         jPanel16Layout.setHorizontalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1288, Short.MAX_VALUE)
+            .addComponent(jPanel40, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addGap(89, 89, 89)
+                .addComponent(jLabel66, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(130, 130, 130)
+                .addComponent(jButton1)
+                .addGap(42, 42, 42)
+                .addComponent(jButton2)
+                .addGap(38, 38, 38)
+                .addComponent(jButton3)
+                .addGap(45, 45, 45)
+                .addComponent(jButton4)
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 903, Short.MAX_VALUE)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel66, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel40, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(333, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab2", jPanel16);
@@ -2045,6 +2205,130 @@ double purchase = 0;
         adminchoose(SignInDialog.userType);
     }//GEN-LAST:event_jLabel1MouseClicked
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        HashMap<String, Object> params = new HashMap<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String date = sdf.format(new Date());
+
+        params.put("date", date);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            java.sql.Connection connection = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "barananadil");
+
+            InputStream path = this.getClass().getResourceAsStream("/reports/testChart.jasper");
+
+            JasperPrint report = JasperFillManager.fillReport(path, params, connection);
+
+            JasperViewer.viewReport(report, false);
+            connection.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        HashMap<String, Object> params = new HashMap<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String date = sdf.format(new Date());
+
+        params.put("date", date);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            java.sql.Connection connection = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "barananadil");
+
+            InputStream path = this.getClass().getResourceAsStream("/reports/testChart(Date).jasper");
+
+            JasperPrint report = JasperFillManager.fillReport(path, params, connection);
+
+            JasperViewer.viewReport(report, false);
+            connection.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+        HashMap<String, Object> params = new HashMap<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String date = sdf.format(new Date());
+
+        params.put("date", date);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            java.sql.Connection connection = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "barananadil");
+
+            InputStream path = this.getClass().getResourceAsStream("/reports/testChart(Month).jasper");
+
+            JasperPrint report = JasperFillManager.fillReport(path, params, connection);
+
+            JasperViewer.viewReport(report, false);
+            connection.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+
+        HashMap<String, Object> params = new HashMap<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String date = sdf.format(new Date());
+
+        params.put("date", date);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            java.sql.Connection connection = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/my_pos_system1", "root", "barananadil");
+
+            InputStream path = this.getClass().getResourceAsStream("/reports/testChart(Year).jasper");
+
+            JasperPrint report = JasperFillManager.fillReport(path, params, connection);
+
+            JasperViewer.viewReport(report, false);
+            connection.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -2062,6 +2346,10 @@ double purchase = 0;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -2124,6 +2412,7 @@ double purchase = 0;
     private javax.swing.JLabel jLabel63;
     private javax.swing.JLabel jLabel64;
     private javax.swing.JLabel jLabel65;
+    private javax.swing.JLabel jLabel66;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -2161,6 +2450,7 @@ double purchase = 0;
     private javax.swing.JPanel jPanel38;
     private javax.swing.JPanel jPanel39;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel40;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;

@@ -340,3 +340,15 @@ Sep 20, 2024 11:02:39 PM gui.SignInDialog signIn
 INFO: Admin Barana Nadil Log In to the System
 Sep 20, 2024 11:02:42 PM gui.AdminChoose jButton1ActionPerformed
 INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 22, 2024 1:57:13 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 22, 2024 1:57:16 PM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 22, 2024 2:03:40 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 22, 2024 2:03:43 PM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 22, 2024 2:03:52 PM gui.AdminDashboard addToReturnTable
+INFO: Type :2 User : Barana Nadil Return Stock : 5 To supplier.
+Sep 22, 2024 5:38:39 PM gui.EmployeeRegistration jButton1ActionPerformed
+INFO: Type :0 User : null Registerd New Employee.  Employee_NIC  : 200362210030.
