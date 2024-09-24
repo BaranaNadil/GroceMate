@@ -6,12 +6,15 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 import model.MySQL;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -33,11 +36,84 @@ public class SelesPannel extends javax.swing.JPanel {
     public SelesPannel() {
         initComponents();
         loadLineChart();
+        loadSelesTable();
+
     }
-
-
     
-        //// Load Selling Chart
+    
+    
+    ///reset Total Sellings
+    private void resetTotalSellings(){
+        jDateChooser1.setDate(null);
+        jDateChooser2.setDate(null);
+        loadSelesTable();
+    }
+    ///reset Total Sellings
+    
+    
+
+    /// Load Seles Table
+    private void loadSelesTable() {
+
+        Date fdate = jDateChooser1.getDate();
+        Date tdate = jDateChooser2.getDate();
+
+        String quary = "SELECT * FROM `invoice` "
+                + "INNER JOIN `employee` ON `invoice`.`employee_nic` = `employee` .`nic` "
+                + "INNER JOIN `customes` ON  `invoice`.`customes_mobile` = `customes`.`mobile` "
+                + "INNER JOIN `payment_method` ON `invoice`.`payment_method_id` = `payment_method`.`id` ";
+
+        if (fdate != null && tdate == null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String fromDate = sdf.format(jDateChooser1.getDate());
+
+            quary += " WHERE `date_time` > '" + fromDate + "' ";
+
+        } else if (fdate == null && tdate != null) {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String toDate = sdf.format(jDateChooser2.getDate());
+
+            quary += " WHERE `date_time` < '" + toDate + "' ";
+
+        } else if (fdate != null && tdate != null) {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String fromDate = sdf.format(jDateChooser1.getDate());
+            String toDate = sdf.format(jDateChooser2.getDate());
+            
+            quary += " WHERE `date_time` BETWEEN '" + fromDate + "' AND '"+toDate+"'  ";
+
+        }
+
+        try {
+
+            ResultSet result = MySQL.execute(quary);
+
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+
+            while (result.next()) {
+                Vector<String> vector = new Vector();
+
+                vector.add(result.getString("id"));
+                vector.add(result.getString("customes.first_name") + " " + result.getString("last_name"));
+                vector.add(result.getString("employee.first_name") + " " + result.getString("employee.last_name"));
+                vector.add(result.getString("payment_method.name"));
+                vector.add(result.getString("date_time"));
+                vector.add(result.getString("discount"));
+                vector.add(result.getString("payed_ammount"));
+
+                model.addRow(vector);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /// Load Seles Table
+
+    //// Load Selling Chart
     ////Load Line Chart to a panel 
     private void addLineChartToPanel() {
         // Create dataset
@@ -104,11 +180,6 @@ public class SelesPannel extends javax.swing.JPanel {
     }
 
     //// Load Selling Chart
-    
-    
-    
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -131,6 +202,7 @@ public class SelesPannel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -192,15 +264,16 @@ public class SelesPannel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(10, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jLabel66, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton2)
+                        .addComponent(jButton3)
+                        .addComponent(jButton4)
+                        .addComponent(jLabel66, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -230,26 +303,65 @@ public class SelesPannel extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("From :");
 
+        jDateChooser1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooser1PropertyChange(evt);
+            }
+        });
+
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText(":");
+
+        jDateChooser2.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooser2PropertyChange(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("To :");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Invoice ID", "customer", "employee_name", "payment_method", "Date Time", "Discount", "Payed Ammount"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+            jTable1.getColumnModel().getColumn(6).setResizable(false);
+        }
 
         jButton5.setText("Print");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("reset");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -268,7 +380,9 @@ public class SelesPannel extends javax.swing.JPanel {
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 331, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 264, Short.MAX_VALUE)
                 .addComponent(jButton5)
                 .addGap(33, 33, 33))
             .addComponent(jScrollPane1)
@@ -284,7 +398,9 @@ public class SelesPannel extends javax.swing.JPanel {
                     .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2)
-                    .addComponent(jButton5))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton5)
+                        .addComponent(jButton6)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE))
         );
@@ -412,6 +528,36 @@ public class SelesPannel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+      resetTotalSellings();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser1PropertyChange
+        loadSelesTable();
+    }//GEN-LAST:event_jDateChooser1PropertyChange
+
+    private void jDateChooser2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooser2PropertyChange
+     loadSelesTable();
+    }//GEN-LAST:event_jDateChooser2PropertyChange
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+
+        String from = String.valueOf(jDateChooser1.getDate());
+        String to = String.valueOf(jDateChooser2.getDate());
+        
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(from, from);
+        params.put(to, to);
+        try{
+        JRTableModelDataSource datasours = new JRTableModelDataSource(jTable1.getModel());
+        InputStream path = this.getClass().getResourceAsStream("/reports/totalSelesReport.jasper");
+       JasperPrint report = JasperFillManager.fillReport(path, params, datasours);
+        JasperViewer.viewReport(report,false);
+        }catch(JRException e){
+        e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -419,6 +565,7 @@ public class SelesPannel extends javax.swing.JPanel {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
@@ -429,9 +576,6 @@ public class SelesPannel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel66;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel40;
-    private javax.swing.JPanel jPanel41;
-    private javax.swing.JPanel jPanel42;
     private javax.swing.JPanel jPanel43;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

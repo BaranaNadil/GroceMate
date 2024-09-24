@@ -356,3 +356,11 @@ Sep 23, 2024 2:55:09 PM gui.SignInDialog signIn
 INFO: Admin Barana Nadil Log In to the System
 Sep 23, 2024 2:55:46 PM gui.AdminChoose jButton1ActionPerformed
 INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 24, 2024 1:15:29 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 24, 2024 1:15:32 PM gui.AdminChoose jButton1ActionPerformed
+INFO: User :Barana Nadil select to go to Admin Pannel .
+Sep 24, 2024 10:04:48 PM gui.SignInDialog signIn
+INFO: Admin Barana Nadil Log In to the System
+Sep 24, 2024 10:04:51 PM gui.AdminChoose jButton2ActionPerformed
+INFO: User :Barana Nadil select to go to Cashier End.

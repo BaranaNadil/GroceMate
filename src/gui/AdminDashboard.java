@@ -1570,6 +1570,12 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel58.setText("Purchase & Sales");
         jPanel36.add(jLabel58, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 290, 40));
 
+        jPanel39.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel39MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel39Layout = new javax.swing.GroupLayout(jPanel39);
         jPanel39.setLayout(jPanel39Layout);
         jPanel39Layout.setHorizontalGroup(
@@ -1962,9 +1968,11 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel3MouseClicked
 
     private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked
-        resetPanelColors();
+
         jPanel4.setBackground(new Color(0, 153, 102));
         jTabbedPane1.setSelectedIndex(1);
+        
+        updatePanelColors(1);
     }//GEN-LAST:event_jPanel4MouseClicked
 
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
@@ -2035,7 +2043,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     private void jTabbedPane1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTabbedPane1KeyReleased
 
         int index = jTabbedPane1.getSelectedIndex();
-        updatePanelColors(index);
+      updatePanelColors(index);
 
     }//GEN-LAST:event_jTabbedPane1KeyReleased
 
@@ -2058,6 +2066,10 @@ public class AdminDashboard extends javax.swing.JFrame {
     private void jLabel57MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel57MouseEntered
 
     }//GEN-LAST:event_jLabel57MouseEntered
+
+    private void jPanel39MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel39MouseClicked
+
+    }//GEN-LAST:event_jPanel39MouseClicked
 
     /**
      * @param args the command line arguments
